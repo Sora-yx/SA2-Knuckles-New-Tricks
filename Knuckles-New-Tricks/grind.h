@@ -2,7 +2,7 @@
 
 
 enum KnuxAnimsRail : unsigned __int16 {
-	Anm_RailL = 203,
+	Anm_RailL = 217,
 	Anm_RailR,
 	Anm_RailCrouchL,
 	Anm_RailCrouchR,
@@ -36,7 +36,7 @@ static inline int sub_45B2C0(CharObj2Base* a1, int a2, EntityData1* a3)
 }
 
 static const void* const CheckGrindPtr = (void*)0x726D00;
-static inline signed int CheckTrickASM(TailsCharObj2* a1, CharObj2Base* a2, EntityData1* a3)
+static inline signed int CheckTrickASM(KnucklesCharObj2* a1, CharObj2Base* a2, EntityData1* a3)
 {
 	signed int result;
 
@@ -85,19 +85,6 @@ static inline void sub_4EC330(int a1, int a2, int a3)
 }
 
 
-static const void* const sub_7274F0Ptr = (void*)0x7274F0;
-float* sub_7274F0(EntityData1* a1)
-{
-	float* result;
-	__asm
-	{
-		mov eax, [a1] // eax0
-		// Call your __cdecl function here:
-		call sub_7274F0Ptr
-		fstp result
-	}
-	return result;
-}
 
 //Math stuff that allow character to move on the rail
 static const void* const sub_46D040Ptr = (void*)0x46D040;
@@ -138,3 +125,17 @@ static inline void sub_754EC0(int playernum)
 		call sub_754EC0Ptr
 	}
 }
+
+FunctionPointer(void, DoGrindThing, (EntityData1* data, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux), 0x725F30);
+FunctionPointer(double, SomethingAboutHandGrind, (EntityData1* a1, EntityData2* a2, KnucklesCharObj2* a3), 0x7271D0);
+FunctionPointer(signed int, SomethingAboutHandGrind2, (EntityData1* a1, EntityData2* a2, KnucklesCharObj2* a3), 0x46D6D0);
+FunctionPointer(int, calcGrindRotationMaybe, (NJS_VECTOR* v, Rotation* rot), 0x4905A0);
+FunctionPointer(int, sub_447580, (NJS_OBJECT* v), 0x447580);
+FunctionPointer(void, SetNewRot, (int a1, int a2, int a3), 0x46C490);
+
+int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a4);
+signed int SetHandGranding(EntityData2* data2, CharObj2Base* co2, EntityData1* data1);
+void PlayGrindAnimation(EntityData1* data1, CharObj2Base* co2);
+void MoveCharacterOnRail(EntityData1* a1, CharObj2Base* a2, EntityData2* a3);
+void LoadRailParticules(KnucklesCharObj2* co2, EntityData2* data2);
+void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux);

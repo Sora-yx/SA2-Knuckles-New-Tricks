@@ -1,6 +1,7 @@
 #include "pch.h"
 
 bool isCustomAnim = true;
+
 HelperFunctions HelperFunctionsGlobal;
 
 extern "C" {

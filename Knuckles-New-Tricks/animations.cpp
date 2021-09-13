@@ -217,7 +217,21 @@ AnimationInfo KnuxAnimationList_R[] = {
 	{ 213, 142, 3, 213, 0.125f, 0.5f },
 	{ 214, 142, 3, 214, 0.125f, 0.5f },
 	{ 215, 171, 4, 211, 0.25f, 0.5f },
-	{ 216, 171, 3, 216, 0.25f, 0.2f }
+	{ 216, 171, 3, 216, 0.25f, 0.2f },
+	//grinding + tricks
+	{ 217, 142, 13, 217, 0.25f, 0.3f },
+	{ 218, 142, 13, 218, 0.25f, 0.3f },
+	{ 219, 142, 13, 219, 0.25f, 0.3f },
+	{ 220, 142, 13, 220, 0.25f, 0.3f },
+	{ 221, 142, 13, 221, 0.25f, 0.3f },
+	{ 222, 142, 13, 222, 0.25f, 0.3f },
+	{ 223, 142, 13, 223, 0.25f, 0.3f },
+	{ 224, 142, 13, 224, 0.25f, 0.3f },
+	{ 225, 142, 3, 225, 0.25f, 0.3f },
+	{ 226, 142, 3, 226, 0.25f, 0.3f },
+	{ 227, 142, 9, 15, 0.0625f, 0.2f },
+	{ 228, 142, 4, 15, 0.0625f, 0.35f },
+	{ 229, 142, 4, 15, 0.0625f, 0.35f },
 };
 
 AnimationInfo TikalAnimationList[] = {
@@ -983,6 +997,10 @@ void Init_NewAnimation() {
 	if (!isCustomAnim)
 		return;
 
-	WriteData((AnimationInfo**)0x72821A, KnuxAnimationList_R);
+	WriteData((AnimationInfo**)0x72821F, KnuxAnimationList_R);
 	WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);
+
+
+	/**if (isCustomAnim)
+		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\knuckmtn.prs", "Resource\\gd_PC\\Animations\\knuckmtn.prs");*/
 }

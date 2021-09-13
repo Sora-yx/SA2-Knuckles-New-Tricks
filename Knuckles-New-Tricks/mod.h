@@ -1,10 +1,12 @@
 #pragma once
 
+extern HelperFunctions HelperFunctionsGlobal;
 extern bool isCustomAnim;
 
 enum knuxAction {
 	Grinding = 86,
-	HandGrinding
+	HandGrinding,
+	Rolling
 };
 
 const uint8_t playerMax = 2;

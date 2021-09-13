@@ -3,7 +3,7 @@
 
 
 //Most of the functions here are directly copied pasted from the disassembly from Sonic grinding, with few extra fixes.
-int setGrindingNextAction(TailsCharObj2* a2, CharObj2Base* a3, EntityData1* a4) {
+int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a4) {
 	NJS_VECTOR result;
 	int v8 = 0;
 	float* v21;
@@ -91,7 +91,7 @@ int setGrindingNextAction(TailsCharObj2* a2, CharObj2Base* a3, EntityData1* a4) 
 	return 1;
 }
 
-void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, TailsCharObj2* co2Miles) {
+void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux) {
 	if (data1->NextAction != 0 || data1->Status & Status_DoNextAction) {
 		return;
 	}
@@ -113,7 +113,7 @@ void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, 
 		if (KnuxJump(data1, co2)) {
 			data1->Status &= 0xDFFFu;
 		}
-		else if (*(WORD*)&co2Miles->field_1BC[420] <= 120) {
+		else if (*(WORD*)&co2Knux->field_1BC[420] <= 120) {
 			if (!Action_Held[co2->PlayerNum])
 			{
 				co2->ActionWindowItems[co2->ActionWindowItemCount++ & 7] = 71;
@@ -163,21 +163,21 @@ void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, 
 
 void MoveCharacterOnRail(EntityData1* a1, CharObj2Base* a2, EntityData2* a3) {
 	sub_46D040(a1, a2, a3);
-	if (a1->Action != 72)
+	if (a1->Action != HandGrinding)
 		getRailAccel(a2, a1, a3);
 	return;
 }
 
 
 
-void PowderExecute_Rails(TailsCharObj2* sco2, NJS_VECTOR* dir) {
+void PowderExecute_Rails(KnucklesCharObj2* sco2, NJS_VECTOR* dir) {
 	float idk = static_cast<float>(rand()) * 0.00003f * 3.0f;
 	if (idk > 0.0f) {
 		PowderExecute(dir, idk, (NJS_VECTOR*)&sco2->field_1BC[68], sco2->base.PlayerNum);
 	}
 }
 
-void LoadRailParticules(TailsCharObj2* co2, EntityData2* data2) {
+void LoadRailParticules(KnucklesCharObj2* co2, EntityData2* data2) {
 	if (fabs(co2->base.Speed.x) >= 3.7f) {
 		NJS_VECTOR speed;
 		speed.x = data2->Velocity.x * 0.9f;
@@ -267,7 +267,7 @@ void RailAnim_ToRight(CharObj2Base* co2) {
 	}
 }
 
-//SA2 hardcode all the grinding animations id, sadly Miles already uses those for different actions, so we have to manually add new animation :(
+//SA2 hardcode all the grinding animations id
 void PlayGrindAnimation(EntityData1* data1, CharObj2Base* co2) {
 	if (isCustomAnim == false || data1->Action != Grinding || co2->AnimInfo.Next == 15) {
 		return;
@@ -297,7 +297,7 @@ void PlayGrindAnimation(EntityData1* data1, CharObj2Base* co2) {
 
 
 
-void CheckScoreTrick(EntityData1* data1, CharObj2Base* co2, EntityData2* data2, TailsCharObj2* MilesCO2) {
+void CheckScoreTrick(EntityData1* data1, CharObj2Base* co2, EntityData2* data2, KnucklesCharObj2* KnuxCO2) {
 	char getcharID2 = 0;
 	int curSound = 0;
 	int idk = 0;
@@ -373,7 +373,7 @@ void CheckScoreTrick(EntityData1* data1, CharObj2Base* co2, EntityData2* data2, 
 	}
 	sub_4EC330(idk3, co2->PlayerNum, idk2);
 
-	idk6 = MilesCO2->field_3BC[1];
+	idk6 = KnuxCO2->field_400[1];
 	if (!idk6)
 	{
 		DispTechniqueScore_Load(1000);
@@ -435,6 +435,21 @@ signed int SetHandGranding(EntityData2* data2, CharObj2Base* co2, EntityData1* d
 	co2->Speed.x += 2.3;
 	co2->Speed.y = 0.0f;
 	return 1;
+}
+
+
+static const void* const sub_7274F0Ptr = (void*)0x7274F0;
+float* sub_7274F0(EntityData1* a1)
+{
+	float* result;
+	__asm
+	{
+		mov eax, [a1] // eax0
+		// Call your __cdecl function here:
+		call sub_7274F0Ptr
+		fstp result
+	}
+	return result;
 }
 
 void DoHangGrinding(EntityData1* data, CharObj2Base* co2) {
