@@ -151,10 +151,9 @@ void Knux_Main_r(ObjectMaster* obj)
 		LoadRailParticules(co2Knux, data2);
 		break;
 	}
-
-
-
 }
+
+
 
 void KnuxTricks_Init() {
 	Knux_Main_t = new Trampoline((int)Knuckles_Main, (int)Knuckles_Main + 0x6, Knux_Main_r);

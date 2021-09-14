@@ -219,8 +219,6 @@ void LoadCharacters_r() {
 	auto original = reinterpret_cast<decltype(LoadCharacters_r)*>(LoadCharacters_t->Target());
 	original();
 
-
-
 	if (isCharaSelect()) {
 		for (int i = 0; i < 2; i++) {
 			if (MainCharObj1[i]) {
@@ -238,6 +236,85 @@ void LoadCharacters_r() {
 	}
 
 	return;
+}
+
+bool __cdecl CheckEmeraldManager()
+{
+	if (MissionNum == 1 || MissionNum == 2)
+		return false;
+	if (*(int*)0x1AF014C)
+		return false;
+	switch ((short)CurrentLevel)
+	{
+	case LevelIDs_PumpkinHill:
+	case LevelIDs_AquaticMine:
+	case LevelIDs_SecurityHall:
+	case LevelIDs_WildCanyon:
+	case LevelIDs_DryLagoon:
+	case LevelIDs_DeathChamber:
+	case LevelIDs_EggQuarters:
+	case LevelIDs_MeteorHerd:
+	case LevelIDs_WildCanyon2P:
+	case LevelIDs_MadSpace:
+	case LevelIDs_DryLagoon2P:
+	case LevelIDs_PoolQuest:
+	case LevelIDs_PlanetQuest:
+	case LevelIDs_DeathChamber2P:
+		return true;
+	}
+	return false;
+}
+
+Trampoline* LoadEmeraldManager_t;
+
+void LoadEmeraldManager_r() {
+
+	if (CheckEmeraldManager()) {
+		auto original = reinterpret_cast<decltype(LoadEmeraldManager_r)*>(LoadEmeraldManager_t->Target());
+		original();
+	}
+}
+
+static const void* const Knuckles_LevelBounds_o = (void*)0x737B50;
+__declspec(naked) void Knuckles_LevelBounds_r()
+{
+	__asm
+	{
+		mov	ebx, [CurrentLevel]
+		mov ebx, [ebx]
+		cmp	bx, LevelIDs_PumpkinHill
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_AquaticMine
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_SecurityHall
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_WildCanyon
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_DryLagoon
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_DeathChamber
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_EggQuarters
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_MeteorHerd
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_WildCanyon2P
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_MadSpace
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_DryLagoon2P
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_PoolQuest
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_PlanetQuest
+		je	j_Knuckles_LevelBounds
+		cmp	bx, LevelIDs_DeathChamber2P
+		je	j_Knuckles_LevelBounds
+		xor eax, eax
+		retn
+		j_Knuckles_LevelBounds :
+		jmp[Knuckles_LevelBounds_o]
+	}
 }
 
 
@@ -263,6 +340,15 @@ void Init_Helper() {
 	if (!isSA2Miles()) {
 		WriteData<5>((void*)0x7899e8, 0x90); //remove powersupply
 		BrokenDownSmoke_t = new Trampoline((int)BrokenDownSmokeExec, (int)BrokenDownSmokeExec + 0x7, BrokenDownSmoke_r);
+	}
+
+	if (!isCharaSelect()) {
+		WriteCall((void*)0x729D16, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x729DC5, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x72B0F1, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x72B2E8, Knuckles_LevelBounds_r);
+
+		LoadEmeraldManager_t = new Trampoline((int)LoadEmeraldManager, (int)LoadEmeraldManager + 0x6, LoadEmeraldManager_r);
 	}
 
 	LoadCharacters_t = new Trampoline((int)LoadCharacters, (int)LoadCharacters + 0x6, LoadCharacters_r);

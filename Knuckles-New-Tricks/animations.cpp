@@ -714,7 +714,21 @@ AnimationInfo RougeAnimationList_R[] = {
 	{ 213, 171, 3, 213, 0.125f, 0.5f },
 	{ 214, 171, 3, 214, 0.125f, 0.5f },
 	{ 215, 171, 4, 211, 0.25f, 0.5f },
-	{ 216, 171, 3, 216, 0.0625f, 0.2f }
+	{ 216, 171, 3, 216, 0.0625f, 0.2f },
+	//grinding
+	{ 217, 171, 13, 217, 0.25f, 0.3f },
+	{ 218, 171, 13, 218, 0.25f, 0.3f },
+	{ 219, 171, 13, 219, 0.25f, 0.3f },
+	{ 220, 171, 13, 220, 0.25f, 0.3f },
+	{ 221, 171, 13, 221, 0.25f, 0.3f },
+	{ 222, 171, 13, 222, 0.25f, 0.3f },
+	{ 223, 171, 13, 223, 0.25f, 0.3f },
+	{ 224, 171, 13, 224, 0.25f, 0.3f },
+	{ 225, 171, 3, 225, 0.25f, 0.3f },
+	{ 226, 171, 3, 226, 0.25f, 0.3f },
+	{ 227, 171, 9, 15, 0.0625f, 0.2f },
+	{ 228, 171, 4, 15, 0.0625f, 0.35f },
+	{ 229, 171, 4, 15, 0.0625f, 0.35f },
 };
 
 AnimationInfo ChaosAnimationList[] = {
@@ -1001,6 +1015,8 @@ void Init_NewAnimation() {
 	WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);
 
 
-	/**if (isCustomAnim)
-		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\knuckmtn.prs", "Resource\\gd_PC\\Animations\\knuckmtn.prs");*/
+	if (isCustomAnim) {
+		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\knuckmtn.prs", "Resource\\gd_PC\\anim\\knuckmtn.prs");
+		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\rougemtn.prs", "Resource\\gd_PC\\anim\\rougemtn.prs");
+	}
 }
