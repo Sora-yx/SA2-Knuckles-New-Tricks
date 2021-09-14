@@ -115,6 +115,7 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	switch (data1->Action) {
 
 	case Grinding:
+
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
 			return;
 

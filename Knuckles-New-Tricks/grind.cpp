@@ -92,7 +92,7 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 }
 
 void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux) {
-	if (data1->NextAction != 0 || data1->Status & Status_DoNextAction) {
+	if (Knux_CheckNextActions_r(data2, co2Knux, data1, co2)) {
 		return;
 	}
 
@@ -110,10 +110,11 @@ void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, 
 	}*/
 
 	if (data1->Status & Status_DisableControl || !Jump_Pressed[co2->PlayerNum] || !sub_45B2C0(co2, co2->PlayerNum, data1) || sub_45B2C0(co2, co2->PlayerNum, data1) > 3) {
+
 		if (KnuxJump(data1, co2)) {
 			data1->Status &= 0xDFFFu;
 		}
-		else if (*(WORD*)&co2Knux->field_1BC[420] <= 120) {
+		else if (co2->Speed.x > 0.8) {
 			if (!Action_Held[co2->PlayerNum])
 			{
 				co2->ActionWindowItems[co2->ActionWindowItemCount++ & 7] = 71;

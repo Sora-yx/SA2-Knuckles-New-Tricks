@@ -1,6 +1,7 @@
 #include "pch.h"
 
 bool isCustomAnim = true;
+int isKnuxAdventure = 0;
 
 HelperFunctions HelperFunctionsGlobal;
 
@@ -10,6 +11,7 @@ extern "C" {
 
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		isCustomAnim = config->getBool("General", "isCustomAnim", true);
+		isKnuxAdventure = config->getInt("General", "isKnuxAdventure", 0);
 		delete config;
 
 		HelperFunctionsGlobal = helperFunctions;
