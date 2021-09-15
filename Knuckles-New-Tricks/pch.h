@@ -8,11 +8,13 @@
 #include "AnimationFile.h"
 #include "Trampoline.h"
 #include "IniFile.hpp"
+#include "ModelInfo.h"
 #include "UsercallFunctionHandler.h"
 
 #include "mod.h"
 #include "SA2-Functions.h"
 #include "SA2-Variables.h"
 #include "util.h"
+
 
 #endif

@@ -453,7 +453,7 @@ float* sub_7274F0(EntityData1* a1)
 	return result;
 }
 
-void DoHangGrinding(EntityData1* data, CharObj2Base* co2) {
+void DoHandGrinding(EntityData1* data, CharObj2Base* co2) {
 	if (data->NextAction != 0)
 		return;
 

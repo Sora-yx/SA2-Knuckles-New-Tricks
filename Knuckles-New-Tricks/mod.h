@@ -7,7 +7,8 @@ extern int isKnuxAdventure;
 enum knuxAction {
 	Grinding = 86,
 	HandGrinding,
-	Rolling
+	Rolling,
+	Punch
 };
 
 const uint8_t playerMax = 2;
@@ -21,3 +22,4 @@ void Init_Helper();
 void Init_StartEndPos();
 void Init_NewAnimation();
 signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2, EntityData1* a3, CharObj2Base* a4);
+void Load_KnuxPunch();

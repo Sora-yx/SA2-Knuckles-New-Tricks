@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "grind.h"
+#include "punch.h"
 
 Trampoline* Knux_Main_t;
 Trampoline* Knux_CheckNextActions_t;
@@ -58,7 +59,7 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 		a3->Action = 56;
 		a3->Status &= 0xDAFFu;
 		return 1;
-	case 31:
+	case 31: 
 		if (!isRando()) {
 
 			if (setGrindingNextAction(a2, a4, a3))
@@ -112,8 +113,16 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	FunctionPointer(void, original, (EntityData1* data1, EntityData2* data2, KnucklesCharObj2 * a3, KnucklesCharObj2* a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
+	int currentAnim = a4->base.AnimInfo.Current;
+
 	switch (data1->Action) {
 
+	case Action_None:
+	case Action_Run:
+		if (Knux_CheckPunchInput(&a4->base, data1)) {
+			return;
+		}
+		break;
 	case Grinding:
 
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
@@ -121,6 +130,32 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 
 		CheckGrindThing(data1, data2, &a4->base, a3);
 		break;
+	case HandGrinding: //Or whatever you call that thing in CG
+		DoHandGrinding(data1, &a4->base);
+		return;
+	case Punch:
+		
+		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base) || (a4->base.AnimInfo.Current) == 0 || currentAnim == punch03Anim) //todo add animation
+		{
+			data1->Collision->CollisionArray[1].attr |= 0x10u;
+			if (data1->Action != Action_Death)
+			{
+				data1->Action = Action_None;
+				return;
+			}
+			//sub_476810(v6, v3);
+		}
+		else if (currentAnim != punch01Anim && currentAnim != punch03Anim + 3 || data1->Action != Action_Dig) //todo add anim check and dig function
+		{
+			//sub_474090(entity2);
+			if ((Controllers[a4->base.PlayerNum].on & punchButton) == 0)
+			{
+				//v6->field_84 = -1;
+			}
+			return;
+		}
+		data1->Status &= 0xFBu;
+		return;
 	}
 
 }
@@ -130,17 +165,10 @@ void Knux_Main_r(ObjectMaster* obj)
 	ObjectFunc(origin, Knux_Main_t->Target());
 	origin(obj);
 
-	/**KnucklesCharObj2* co2Knux = (KnucklesCharObj2*)&obj->Data2;
-	CharObj2Base* co2 = &co2Knux->base;
+	CharObj2Base* co2 = obj->Data2.Character;
 	EntityData1* data1 = obj->Data1.Entity;
-	EntityData2* data2 = (EntityData2*)obj->EntityData2;*/
-
-
-	CharObj2Base* co2 = MainCharObj2[0];
-	EntityData1* data1 = MainCharObj1[0];
-	EntityData2* data2 = EntityData2Ptrs[0];
-	KnucklesCharObj2* co2Knux = (KnucklesCharObj2*)MainCharObj2[0];
-
+	EntityData2* data2 = (EntityData2*)obj->EntityData2;
+	KnucklesCharObj2* co2Knux = (KnucklesCharObj2*)obj->Data2.Character;
 
 	switch (data1->Action) {
 
@@ -149,6 +177,37 @@ void Knux_Main_r(ObjectMaster* obj)
 		PlayGrindAnimation(data1, co2); //not called by the game, custom function to play animation for Knux
 		MoveCharacterOnRail(data1, co2, data2);
 		LoadRailParticules(co2Knux, data2);
+		break;
+	case HandGrinding: //Or whatever you call that thing in CG
+		SomethingAboutHandGrind(data1, data2, co2Knux);
+		MoveCharacterOnRail(data1, co2, data2);
+		SomethingAboutHandGrind2(data1, data2, co2Knux);
+		break;
+	case Punch:
+		KnuxComboAction(data2, co2, data1);
+		PlayerGetRotation(data1, data2, co2);
+		PGetFriction(data1, data2, co2);
+		PlayerGetSpeed(data1, co2, data2);
+
+		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2) //TODO: Add animation punch check here
+		{
+			co2->Speed.x = (0.2 - co2->Speed.x) * 0.5 + co2->Speed.x;
+		}
+
+		if (PlayerSetPosition(data1, data2, co2))
+		{
+			Vector3 a3 = data1->Position;
+			GetBufferedPositionAndRot(co2->PlayerNum, 1, &a3, 0);
+			data1->Position = a3;
+			co2->Speed.z = 0.0;
+			co2->Speed.y = 0.0;
+			co2->Speed.x = 0.0;
+			data2->Velocity.z = 0.0;
+			data2->Velocity.y = 0.0;
+			data2->Velocity.x = 0.0;
+		}
+	
+		PResetPosition(data1, data2, co2);
 		break;
 	}
 }

@@ -16,6 +16,9 @@
     <Filter Include="Source Files\abilities">
       <UniqueIdentifier>{bfe86eb0-4ae8-4667-93db-82c83bb2d35e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\abilities">
+      <UniqueIdentifier>{57041c4c-f358-416d-a538-73ac104db98a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="punch.cpp">
+      <Filter>Source Files\abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -62,11 +68,14 @@
     <ClInclude Include="SA2-Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="grind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SA2-Variables.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="grind.h">
+      <Filter>Header Files\abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="punch.h">
+      <Filter>Header Files\abilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

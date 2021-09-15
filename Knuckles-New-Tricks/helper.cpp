@@ -212,12 +212,38 @@ void BrokenDownSmoke_r(ObjectMaster* a1) {
 	}
 }
 
+static const void* const loc_776339 = (void*)0x776339;
+static const void* const loc_776580 = (void*)0x776580;
+__declspec(naked) void  CheckBreakCGGlasses() {
+	if (MainCharObj1[0]->Action == 13 || isKnuxAttacking())
+	{
+		_asm jmp loc_776339
+	}
+	else {
+		_asm jmp loc_776580
+	}
+}
+
+
+static const void* const loc_776D23 = (void*)0x776D23;
+static const void* const loc_776D5F = (void*)0x776D5F;
+__declspec(naked) void  CheckGravitySwitch() {
+	if (MainCharObj1[0]->Action == 0x53 || (Controllers[0].press & (Buttons_X | Buttons_B)))
+	{
+		_asm jmp loc_776D23
+	}
+	else {
+		_asm jmp loc_776D5F
+	}
+}
 
 
 void LoadCharacters_r() {
 
 	auto original = reinterpret_cast<decltype(LoadCharacters_r)*>(LoadCharacters_t->Target());
 	original();
+
+	Load_KnuxPunch();
 
 	if (isCharaSelect()) {
 		for (int i = 0; i < 2; i++) {
@@ -275,6 +301,8 @@ void LoadEmeraldManager_r() {
 	}
 }
 
+//Credits: MainMemory Character Select Mod
+
 static const void* const Knuckles_LevelBounds_o = (void*)0x737B50;
 __declspec(naked) void Knuckles_LevelBounds_r()
 {
@@ -317,6 +345,66 @@ __declspec(naked) void Knuckles_LevelBounds_r()
 	}
 }
 
+static const void* const loc_6C6431 = (void*)0x6C6431;
+static const void* const loc_6C6412 = (void*)0x6C6412;
+__declspec(naked) void loc_6C63E7()
+{
+	__asm
+	{
+		mov eax, MissionNum
+		cmp	long ptr[eax], 1
+		je	_loc_6C6412
+		mov	eax, [ebp + 8]
+		cdq
+		mov	esi, 3
+		idiv	esi
+		cmp	edx, 1
+		je _loc_6C6431
+		mov	eax, CurrentLevel
+		mov eax, [eax]
+		cmp	ax, LevelIDs_PumpkinHill
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_AquaticMine
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_SecurityHall
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_WildCanyon
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_DryLagoon
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_DeathChamber
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_EggQuarters
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_MeteorHerd
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_WildCanyon2P
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_MadSpace
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_DryLagoon2P
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_PoolQuest
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_PlanetQuest
+		je	short loc_6C659A
+		cmp	ax, LevelIDs_DeathChamber2P
+		jne	_loc_6C6431
+
+		loc_6C659A :
+		pop	esi
+			pop	ebp
+			pop	ebx
+			retn
+			_loc_6C6412 :
+		mov ecx, 2
+			jmp loc_6C6412
+			_loc_6C6431 :
+		mov ecx, 2
+			jmp[loc_6C6431]
+	}
+}
+
 
 void Init_Helper() {
 
@@ -336,17 +424,27 @@ void Init_Helper() {
 	WriteData<5>((int*)0x6D6B99, 0x90);
 	WriteData<5>((int*)0x77BFFB, 0x90);
 
+	WriteData<3>((int*)0x732ECB, 0x90); //Remove path action, we will manually call it (fix RH last loop)
+	WriteData<2>((int*)0x4cd255, 0x90); //remove chara sonic check in cannon core (fix softlock after the first rail)
+
 
 	if (!isSA2Miles()) {
 		WriteData<5>((void*)0x7899e8, 0x90); //remove powersupply
 		BrokenDownSmoke_t = new Trampoline((int)BrokenDownSmokeExec, (int)BrokenDownSmokeExec + 0x7, BrokenDownSmoke_r);
+		WriteJump(reinterpret_cast<void*>(0x776D1E), CheckGravitySwitch);
 	}
 
+	WriteJump(reinterpret_cast<void*>(0x776330), CheckBreakCGGlasses);
+
 	if (!isCharaSelect()) {
+
+		//fix Knuckles boundary black screen thing
 		WriteCall((void*)0x729D16, Knuckles_LevelBounds_r);
 		WriteCall((void*)0x729DC5, Knuckles_LevelBounds_r);
 		WriteCall((void*)0x72B0F1, Knuckles_LevelBounds_r);
 		WriteCall((void*)0x72B2E8, Knuckles_LevelBounds_r);
+
+		WriteJump((void*)0x6C63E7, loc_6C63E7); // Goal Ring
 
 		LoadEmeraldManager_t = new Trampoline((int)LoadEmeraldManager, (int)LoadEmeraldManager + 0x6, LoadEmeraldManager_r);
 	}

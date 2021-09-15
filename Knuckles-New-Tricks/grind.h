@@ -139,3 +139,5 @@ void PlayGrindAnimation(EntityData1* data1, CharObj2Base* co2);
 void MoveCharacterOnRail(EntityData1* a1, CharObj2Base* a2, EntityData2* a3);
 void LoadRailParticules(KnucklesCharObj2* co2, EntityData2* data2);
 void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux);
+
+void DoHandGrinding(EntityData1* data, CharObj2Base* co2);
