@@ -51,6 +51,9 @@
     <ClCompile Include="punch.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>
+    <ClCompile Include="particles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="punch.h">
       <Filter>Header Files\abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="particles.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

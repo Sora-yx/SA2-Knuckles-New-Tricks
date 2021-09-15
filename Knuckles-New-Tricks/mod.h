@@ -7,8 +7,8 @@ extern int isKnuxAdventure;
 enum knuxAction {
 	Grinding = 86,
 	HandGrinding,
-	Rolling,
-	Punch
+	Action_SA1Rolling,
+	Action_SA1Punch
 };
 
 const uint8_t playerMax = 2;

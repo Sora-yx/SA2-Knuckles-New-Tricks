@@ -150,6 +150,7 @@
     <ClCompile Include="helper.cpp" />
     <ClCompile Include="Knuckles.cpp" />
     <ClCompile Include="mod.cpp" />
+    <ClCompile Include="particles.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
@@ -163,6 +164,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="grind.h" />
     <ClInclude Include="mod.h" />
+    <ClInclude Include="particles.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="punch.h" />
     <ClInclude Include="SA2-Functions.h" />

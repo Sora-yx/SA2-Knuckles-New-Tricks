@@ -33,8 +33,7 @@ bool isKnuxAttacking() {
 		if (!data1)
 			continue;
 
-		if (data1->Action >= Action_Punch && data1->Action <= Action_Punch3Run || data1->Action == Action_Jump || data1->Action == Action_SpinCharge || data1->Action == Action_HomingAttack
-			|| data1->Action >= Action_Somersault1 && data1->Action <= Action_MovingSomersault1 || data1->Action == Action_BounceDown) {
+		if (data1->Action == Action_Glide || data1->Action >= Action_Punch && data1->Action <= Action_DrillClaw || data1->Action == Action_Jump || data1->Action == Action_SA1Rolling || data1->Action == Action_SA1Punch) {
 
 			return true;
 		}
@@ -52,8 +51,8 @@ bool isAttackingBoxes() {
 
 	EntityData1* data1 = MainCharObj1[0];
 
-	if (data1->Action == Action_SpinRelease || data1->Action == Action_SpinCharge || data1->Action == Action_HomingAttack
-		|| data1->Action >= Action_Somersault1 && data1->Action <= Action_MovingSomersault1 || data1->Action == Action_BounceDown) {
+	if (data1->Action >= Action_Punch && data1->Action <= Action_Punch3Run || data1->Action == Action_SA1Rolling
+		|| data1->Action == Action_SA1Punch) {
 
 		return true;
 	}
@@ -211,6 +210,24 @@ void BrokenDownSmoke_r(ObjectMaster* a1) {
 		origin(a1);
 	}
 }
+
+
+static const void* const loc_6A82CC = (void*)0x6A82CC;
+static const void* const loc_6A82FF = (void*)0x6A82FF;
+__declspec(naked) void  CheckBreakBirdBox() {
+
+
+
+	if (MainCharObj1[0]->Action == 78 || isKnuxAttacking())
+	{
+		_asm jmp loc_6A82FF
+	}
+	else {
+		_asm jmp loc_6A82CC
+	}
+
+}
+
 
 static const void* const loc_776339 = (void*)0x776339;
 static const void* const loc_776580 = (void*)0x776580;
@@ -435,6 +452,7 @@ void Init_Helper() {
 	}
 
 	WriteJump(reinterpret_cast<void*>(0x776330), CheckBreakCGGlasses);
+	WriteJump(reinterpret_cast<void*>(0x6A82FA), CheckBreakBirdBox);
 
 	if (!isCharaSelect()) {
 

@@ -232,6 +232,10 @@ AnimationInfo KnuxAnimationList_R[] = {
 	{ 227, 142, 9, 15, 0.0625f, 0.2f },
 	{ 228, 142, 4, 15, 0.0625f, 0.35f },
 	{ 229, 142, 4, 15, 0.0625f, 0.35f },
+	//SA1 Punch
+	{ 230, 142, 4, 0, 1.0f, 2.0f },
+	{ 231, 142, 4, 0, 1.0f, 2.0f },
+	{ 232, 142, 4, 8, 0.25f, 1.0f },
 };
 
 AnimationInfo TikalAnimationList[] = {

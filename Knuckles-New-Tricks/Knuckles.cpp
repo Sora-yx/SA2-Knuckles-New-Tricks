@@ -40,7 +40,7 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 			a3->Action = 2;
 		break;
 	case 3:
-		if (a3->Action == Rolling)
+		if (a3->Action == Action_SA1Rolling)
 		{
 			a3->Action = 1;
 			a4->AnimInfo.Next = 1;
@@ -110,6 +110,7 @@ static void __declspec(naked) Knux_CheckNextActionsASM()
 }
 
 void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesCharObj2* a3, KnucklesCharObj2* a4) {
+
 	FunctionPointer(void, original, (EntityData1* data1, EntityData2* data2, KnucklesCharObj2 * a3, KnucklesCharObj2* a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
@@ -133,31 +134,27 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	case HandGrinding: //Or whatever you call that thing in CG
 		DoHandGrinding(data1, &a4->base);
 		return;
-	case Punch:
+	case Action_SA1Punch:
 		
-		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base) || (a4->base.AnimInfo.Current) == 0 || currentAnim == punch03Anim) //todo add animation
-		{
+		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base) || (a4->base.AnimInfo.Current) == 0 || a4->base.AnimInfo.Current == 8) {
+
 			data1->Collision->CollisionArray[1].attr |= 0x10u;
 			if (data1->Action != Action_Death)
 			{
 				data1->Action = Action_None;
-				return;
-			}
-			//sub_476810(v6, v3);
-		}
-		else if (currentAnim != punch01Anim && currentAnim != punch03Anim + 3 || data1->Action != Action_Dig) //todo add anim check and dig function
-		{
-			//sub_474090(entity2);
-			if ((Controllers[a4->base.PlayerNum].on & punchButton) == 0)
-			{
-				//v6->field_84 = -1;
+				data1->Status &= 0xFBFFu;
 			}
 			return;
 		}
-		data1->Status &= 0xFBu;
+
+		if ( (currentAnim == punch01Anim || currentAnim == punch01Anim + 5) && data1->Action == Action_Dig) {
+			data1->Status &= 0xFBFFu;
+			return;
+		}
+
+		Knux_CheckPunchRefresh(data1, &a4->base);
 		return;
 	}
-
 }
 
 void Knux_Main_r(ObjectMaster* obj)
@@ -183,21 +180,21 @@ void Knux_Main_r(ObjectMaster* obj)
 		MoveCharacterOnRail(data1, co2, data2);
 		SomethingAboutHandGrind2(data1, data2, co2Knux);
 		break;
-	case Punch:
+	case Action_SA1Punch:
 		KnuxComboAction(data2, co2, data1);
 		PlayerGetRotation(data1, data2, co2);
 		PGetFriction(data1, data2, co2);
 		PlayerGetSpeed(data1, co2, data2);
 
-		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2) //TODO: Add animation punch check here
+		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2) 
 		{
 			co2->Speed.x = (0.2 - co2->Speed.x) * 0.5 + co2->Speed.x;
 		}
 
 		if (PlayerSetPosition(data1, data2, co2))
 		{
-			Vector3 a3 = data1->Position;
-			GetBufferedPositionAndRot(co2->PlayerNum, 1, &a3, 0);
+			Vector3 a3;
+			GetBufferedPositionAndRot(co2->PlayerNum, 0, &a3, 1);
 			data1->Position = a3;
 			co2->Speed.z = 0.0;
 			co2->Speed.y = 0.0;

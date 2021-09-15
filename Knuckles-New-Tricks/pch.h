@@ -14,6 +14,7 @@
 #include "mod.h"
 #include "SA2-Functions.h"
 #include "SA2-Variables.h"
+#include "particles.h"
 #include "util.h"
 
 
