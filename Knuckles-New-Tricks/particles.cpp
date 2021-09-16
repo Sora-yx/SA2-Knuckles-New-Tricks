@@ -82,66 +82,6 @@ void EffectSmoke(sp_task* spTask, sp_link* spLink)
 	}
 }
 
-sp_task* SpriteTable_Current;
-float ParticleDepthOverride = 0.0f;
-
-sp_task* __cdecl AllocateParticle(sp_link* link, void(__cdecl* exec)(sp_task*, sp_link*))
-{
-	sp_task* result; // eax
-	int v3; // edx
-	float v4; // edx
-
-	if (!link)
-	{
-		return 0;
-	}
-	result = SpriteTable_Current;
-	if (!SpriteTable_Current)
-	{
-		return 0;
-	}
-	SpriteTable_Current = SpriteTable_Current->next;
-
-	result->next = link->head;
-	v3 = link->numtask;
-	link->head = result;
-	link->numtask = v3 + 1;
-	v4 = ParticleDepthOverride;
-	result->exec = exec;
-	result->offset = v4;
-	result->wrtZflg = 0;
-	return result;
-}
-
-void CreateSmoke(NJS_POINT3* pos, NJS_POINT3* velo, double scl)
-{
-	sp_task* spTask; // r3
-	sp_task* spTask2; // r31
-	float v8; // r5
-	double v9; // fp6
-
-	spTask = AllocateParticle(particle_smoke.link, EffectSmoke);
-	spTask2 = spTask;
-	if (spTask)
-	{
-		spTask->pos.x = pos->x;
-		spTask->pos.y = pos->y;
-		spTask->pos.z = pos->z;
-		spTask->spd.x = velo->x;
-		spTask->spd.y = velo->y;
-		v8 = velo->z;
-		spTask->scl = (float)scl * (float)0.15000001;
-		spTask->spd.z = v8;
-		spTask->frame = rand() * 0.000030517578 * 6.0;
-		v9 = (rand() * 0.000030517578 * 360.0 * 65536.0 * 0.002777777777777778);
-		spTask2->argb.a = 1.0;
-		spTask2->work[0].l = (int)&default_smoke; //maybe
-		spTask2->argb.r = 1.0;
-		spTask2->argb.g = 1.0;
-		spTask2->argb.b = 1.0;
-		spTask2->ang = v9;
-	}
-}
 
 
 void Load_Particles() {

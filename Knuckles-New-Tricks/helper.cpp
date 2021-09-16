@@ -62,6 +62,17 @@ bool isAttackingBoxes() {
 
 
 
+void DoCollisionAttackStuff(EntityData1* data1) {
+	data1->Status |= Status_Attack;
+	data1->Collision->CollisionArray[0].damage &= 0xFCu;
+	data1->Collision->CollisionArray[0].damage |= 0xCu;
+	data1->Collision->CollisionArray[0].damage |= 0xEF;
+	data1->Collision->CollisionArray[1].center = data1->Position;
+	data1->Collision->CollisionArray[1].attr &= 0xFFFFFFEF;
+	return;
+}
+
+
 Bool __cdecl CheckBreakObject_r(ObjectMaster* obj, ObjectMaster* other)
 {
 

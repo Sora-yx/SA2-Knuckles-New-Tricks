@@ -1,7 +1,5 @@
 #pragma once
 
-extern Buttons punchButton;
-
 signed int Knux_CheckPunchInput(CharObj2Base* co2, EntityData1* data);
 
 struct KnComboEff
@@ -18,9 +16,11 @@ struct KnComboEff
 void KnuxComboAction(EntityData2* a1, CharObj2Base* data2, EntityData1* data1);
 
 enum KnuxPunch {
+	SA2PunchAnim = 109,
 	punch01Anim = 230,
 	punch02Anim,
 	punch03Anim
+
 };
 
 void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2);

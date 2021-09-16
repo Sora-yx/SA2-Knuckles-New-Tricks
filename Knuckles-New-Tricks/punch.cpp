@@ -5,7 +5,6 @@ NJS_TEXNAME Knux_EffTex[11];
 NJS_TEXLIST Knux_EffTexList = { arrayptrandlengthT(Knux_EffTex, Uint32) };
 
 ModelInfo* PunchMDL = nullptr;
-Buttons punchButton = Buttons_Y;
 
 NJS_TEXANIM anim_k_kira = { 0x10, 0x10, 8, 8, 0, 0, 0xFF, 0xFF, 9, 0 };
 NJS_SPRITE knuHadokenSprite = { { 0 } , 1.2, 1.2, 0x8000, &Knux_EffTexList, &anim_k_kira };
@@ -36,6 +35,25 @@ KnComboEff PunchComboArray[10] = {
 	{ 3, 0, 10.0, 16.0, 8.0, 20.0, 18.0 },
 	{ 1, 0, 8.0, 14.0, 4.0, 18.0, 10.0 },
 };
+
+void PlayPunchSoundEffect(CharObj2Base* a2) {
+
+	int soundID = 8203;
+
+	if (a2->CharID2 == Characters_Chaos)
+	{
+		soundID = 8217;
+	}
+	else
+	{
+		if (a2->CharID != Characters_Knuckles)
+		{
+			soundID = 8205;
+		}
+	}
+
+	PlaySoundProbably(soundID, 0, 0, 0);
+}
 
 void __cdecl dispComboFire(ObjectMaster* a1)
 {
@@ -260,10 +278,10 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 					a3.y = 0.0;
 					a3.x = a1->Velocity.x * -0.2;
 					a3.z = a1->Velocity.z * -0.2;
-					CreateSmoke(&a2, &a3, 1.0);
+		
 					a3.z = 0.0;
 					a3.x = 0.0;
-					CreateSmoke(&a2, &a3, 1.0);
+
 					v9 = LoadObject(2, "comoboFire", KnuxeffectComboFire, 10); //Final punch with charge
 					if (v9)
 					{
@@ -367,7 +385,7 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 	{
 		if (co2->AnimInfo.Current <= punch02Anim)
 		{
-			PlaySoundProbably(8206, 0, 0, 0);
+			PlayPunchSoundEffect(co2);
 			VibeThing(co2->CharID, 0, 0, 0);
 		}
 		else if (co2->AnimInfo.Current == punch03Anim)
@@ -386,7 +404,15 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 			v17->Data1.Entity->Scale.x = 1.0;
 		}
 	}
+}
 
+bool isPlayerPressing_PunchInput(CharObj2Base* co2) {
+
+	if (((SA1PunchButton & Controllers[co2->PlayerNum].press) == 0)) {
+		return false;
+	}
+
+	return true;
 }
 
 void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2)
@@ -398,14 +424,14 @@ void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2)
 	{
 		if (co2->AnimInfo.field_10 < 30.0)
 		{
-			if ((punchButton & Controllers[co2->PlayerNum].press) != 0)
+			if (isPlayerPressing_PunchInput(co2))
 			{
 				co2->AnimInfo.Next = curAnim +1;
 				co2->AnimInfo.field_10 = 0.0;
 				return;
 			}
 		}
-		else if ((punchButton & Controllers[co2->PlayerNum].press) != 0) {
+		else if (isPlayerPressing_PunchInput(co2)) {
 			co2->AnimInfo.Next = punch01Anim;
 			co2->AnimInfo.field_10 = 0.0;
 			return;
@@ -416,10 +442,19 @@ void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2)
 
 signed int Knux_CheckPunchInput(CharObj2Base* co2, EntityData1* data)
 {
-	if ((punchButton & Controllers[co2->PlayerNum].press) == 0)
-	{
+	if (co2->CharID2 == Characters_Tikal || co2->CharID2 == Characters_Chaos || !isCustomAnim || SA1PunchButton == SA2PunchButton && isSA2Punch || !isSA1Punch)
+		return 0;
+
+	if (isRoll && RollButton == SA1PunchButton && co2->Speed.x > 1.3) {
 		return 0;
 	}
+
+	if (!isPlayerPressing_PunchInput(co2)) {
+		return 0;
+	}
+
+	if (isRoll && co2->Speed.x > 1.3 && SA1PunchButton == RollButton)
+		return 0;
 
 	data->Action = Action_SA1Punch;
 	co2->AnimInfo.Next = punch01Anim;

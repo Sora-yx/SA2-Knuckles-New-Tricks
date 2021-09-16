@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "grind.h"
 #include "punch.h"
+#include "roll.h"
 
 Trampoline* Knux_Main_t;
 Trampoline* Knux_CheckNextActions_t;
@@ -8,7 +9,7 @@ Trampoline* Knux_RunsAction_t;
 
 
 //Trampoline Usercall Function to get the control of "Check Next Actions" this need 3 functions to work.
-static const void* const Knux_CheckNextActionPtr = (void*)0x732E00;
+
 int Knux_CheckNextActions_original(EntityData2* a1, KnucklesCharObj2* a2, EntityData1* a3, CharObj2Base* a4) {
 	const auto KnuxCheck_ptr = Knux_CheckNextActions_t->Target();
 
@@ -23,14 +24,16 @@ int Knux_CheckNextActions_original(EntityData2* a1, KnucklesCharObj2* a2, Entity
 
 		// Call your __cdecl function here:
 		call KnuxCheck_ptr
-		mov result, eax
 		add esp, 4 // a4
+		mov result, eax
 	}
 
 	return result;
 }
 
 signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2, EntityData1* a3, CharObj2Base* a4) {
+
+
 	switch (a3->NextAction)
 	{
 	case 1:
@@ -59,7 +62,7 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 		a3->Action = 56;
 		a3->Status &= 0xDAFFu;
 		return 1;
-	case 31: 
+	case 31:
 		if (!isRando()) {
 
 			if (setGrindingNextAction(a2, a4, a3))
@@ -111,7 +114,7 @@ static void __declspec(naked) Knux_CheckNextActionsASM()
 
 void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesCharObj2* a3, KnucklesCharObj2* a4) {
 
-	FunctionPointer(void, original, (EntityData1* data1, EntityData2* data2, KnucklesCharObj2 * a3, KnucklesCharObj2* a4), Knux_RunsAction_t->Target());
+	FunctionPointer(void, original, (EntityData1 * data1, EntityData2 * data2, KnucklesCharObj2 * a3, KnucklesCharObj2 * a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
 	int currentAnim = a4->base.AnimInfo.Current;
@@ -120,9 +123,16 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 
 	case Action_None:
 	case Action_Run:
-		if (Knux_CheckPunchInput(&a4->base, data1)) {
+
+		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
 			return;
-		}
+
+		if (Knux_CheckPunchInput(&a4->base, data1))
+			return;
+
+		if (RollCheckInput(data1, &a4->base))
+			return;
+
 		break;
 	case Grinding:
 
@@ -134,8 +144,14 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	case HandGrinding: //Or whatever you call that thing in CG
 		DoHandGrinding(data1, &a4->base);
 		return;
+	case Action_SA1Rolling:
+		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
+			return;
+
+		UnrollCheck(data1, data2, &a4->base);
+		break;
 	case Action_SA1Punch:
-		
+
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base) || (a4->base.AnimInfo.Current) == 0 || a4->base.AnimInfo.Current == 8) {
 
 			data1->Collision->CollisionArray[1].attr |= 0x10u;
@@ -147,7 +163,7 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 			return;
 		}
 
-		if ( (currentAnim == punch01Anim || currentAnim == punch01Anim + 5) && data1->Action == Action_Dig) {
+		if ((currentAnim == punch01Anim || currentAnim == punch01Anim + 5) && data1->Action == Action_Dig) {
 			data1->Status &= 0xFBFFu;
 			return;
 		}
@@ -180,13 +196,18 @@ void Knux_Main_r(ObjectMaster* obj)
 		MoveCharacterOnRail(data1, co2, data2);
 		SomethingAboutHandGrind2(data1, data2, co2Knux);
 		break;
+	case Action_SA1Rolling:
+		RollPhysicControlMain(data1, data2, co2);
+		DoCollisionAttackStuff(data1);
+		UnrollCheckInput(data1, co2);
+		break;
 	case Action_SA1Punch:
 		KnuxComboAction(data2, co2, data1);
 		PlayerGetRotation(data1, data2, co2);
 		PGetFriction(data1, data2, co2);
 		PlayerGetSpeed(data1, co2, data2);
 
-		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2) 
+		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2)
 		{
 			co2->Speed.x = (0.2 - co2->Speed.x) * 0.5 + co2->Speed.x;
 		}
@@ -203,7 +224,7 @@ void Knux_Main_r(ObjectMaster* obj)
 			data2->Velocity.y = 0.0;
 			data2->Velocity.x = 0.0;
 		}
-	
+
 		PResetPosition(data1, data2, co2);
 		break;
 	}
@@ -215,10 +236,4 @@ void KnuxTricks_Init() {
 	Knux_Main_t = new Trampoline((int)Knuckles_Main, (int)Knuckles_Main + 0x6, Knux_Main_r);
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
 	Knux_RunsAction_t = new Trampoline((int)Knuckles_ChecksDamage, (int)Knuckles_ChecksDamage + 0x5, Knux_RunsAction_r);
-
-
-	//Custom anim + new moves
-	Init_NewAnimation();
-
-	Init_StartEndPos();
 }

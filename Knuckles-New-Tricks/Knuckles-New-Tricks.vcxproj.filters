@@ -19,6 +19,9 @@
     <Filter Include="Header Files\abilities">
       <UniqueIdentifier>{57041c4c-f358-416d-a538-73ac104db98a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Characters">
+      <UniqueIdentifier>{00a4965f-b11a-4ccf-98fa-996d586754e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -42,16 +45,25 @@
     <ClCompile Include="grind.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="Knuckles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="animations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="punch.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>
     <ClCompile Include="particles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="roll.cpp">
+      <Filter>Source Files\abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Knuckles.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="action-remap.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="animations.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -82,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="particles.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="roll.h">
+      <Filter>Header Files\abilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

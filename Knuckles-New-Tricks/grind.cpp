@@ -18,10 +18,9 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 	float v40 = 0.0;
 	float v41 = 0.0;
 	a4->Status = a4->Status & 0xFAFF | 0x2000;
-	/*(a1[13].field_28) = 0;
-	(a1[13].field_2C) = 0;*/
+
 	result = { 1, 0, 0 };
-	//sub_429710(); //Make the game crash sometimes not sure why
+
 	v21 = (float*)nj_current_matrix_ptr_;
 	if (nj_current_matrix_ptr_)
 	{

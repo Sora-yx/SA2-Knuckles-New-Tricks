@@ -91,8 +91,8 @@ static inline signed int KnuxJump(EntityData1* a1, CharObj2Base* a2)
 		push[a2]
 		mov eax, [a1]
 		call KnuxJumpPtr
-		mov result, eax
 		add esp, 4
+		mov result, eax
 	}
 	return result;
 }
@@ -217,4 +217,54 @@ static inline void NJDrawSprite3D(int a1, NJS_SPRITE* a2, char a3)
 		call njdrawsprite3Dptr
 		add esp, 8
 	}
+}
+
+
+static const void* const SlowDownThingPtr = (void*)0x45F840;
+static inline float SlowDownThing(EntityData1* a1, EntityData2* a2, CharObj2Base* a3)
+{
+	float result;
+	__asm
+	{
+		mov ebx, a3
+		mov eax, a2
+		mov ecx, a1
+		// Call your __cdecl function here:
+		call SlowDownThingPtr
+		fstp result
+	}
+	return result;
+}
+
+
+static const void* const KnuxSetPunchPtr = (void*)0x734E50;
+static inline signed int Knux_SetPunchAction(EntityData1* data, CharObj2Base* a2, KnucklesCharObj2* a3)
+{
+	signed int result;
+	__asm
+	{
+		push[a3]
+		mov edi, [a2]
+		mov eax, [data]
+		call KnuxSetPunchPtr
+		add esp, 4
+		mov result, eax
+	}
+	return result;
+}
+
+static const void* const KnuxSetPunchRunPtr = (void*)0x734EC0;
+static inline signed int Knux_SetPunchRunAction(EntityData1* data, CharObj2Base* a2, KnucklesCharObj2* a3)
+{
+	signed int result;
+	__asm
+	{
+		push[a3]
+		mov edi, [a2]
+		mov eax, [data]
+		call KnuxSetPunchRunPtr
+		add esp, 4
+		mov result, eax
+	}
+	return result;
 }
