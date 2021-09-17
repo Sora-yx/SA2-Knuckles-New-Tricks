@@ -20,9 +20,7 @@ NJS_TEXANIM anim_knu_punch[]{
 
 NJS_SPRITE knu_punchSprite = { { 0 } , 1.0, 1.0, 0x8000, &Knux_EffTexList, anim_knu_punch };
 
-CollisionData Hadoken_Col = { 0, CollisionShape_Sphere, 0x70, 0x41, 0x400, {0}, 8.0, 0.0, 0.0, 0.0, 0, 0, 0 };
-
-
+CollisionData Hadoken_Col = { 0, CollisionShape_Sphere, 0x70, 0x41, 0x430, {0}, 8.0, 0.0, 0.0, 0.0, 0, 0, 0 };
 KnComboEff PunchComboArray[10] = {
 	{ 0, 1, -19.0, 20.0, 2.0, 20.0, 8.0 },
 	{ 1, 1, -16.0, 17.0, 2.0, 18.0, 8.0 },
@@ -125,6 +123,7 @@ void __cdecl KnuxeffectComboFire(ObjectMaster* obj)
 
 }
 
+
 void __cdecl dispEffectKnuPunch(ObjectMaster* a1)
 {
 	EntityData1* data; // esi
@@ -197,14 +196,18 @@ void __cdecl dispEffectKnuHadoken(ObjectMaster* a1)
 void __cdecl EffectKnuxHadoken(ObjectMaster* obj)
 {
 
-	EntityData1* data; // r31
+	EntityData1* data = obj->Data1.Entity;
+	EntityData2* data2 = obj->Data2.Entity;
 	double timer; // fp0
-	CollisionInfo* v4; // r10
+	CollisionInfo* col; // r10
+
 	double v5; // fp6
 	double v6; // fp5
+	char flag1 = 1;
+	char flag2 = 3;
+	char resultFlag;
 
-	data = obj->Data1.Entity;
-	EntityData2* data2 = obj->Data2.Entity;
+
 	if (data->Action)
 	{
 		if (data->Action == 1)
@@ -216,19 +219,31 @@ void __cdecl EffectKnuxHadoken(ObjectMaster* obj)
 				DeleteObject_(obj);
 				return;
 			}
-			v4 = data->Collision;
+			CollisionData* colArray = data->Collision->CollisionArray;
+			col = data->Collision;
 			v5 = (float)(data->Scale.y + data->Position.y);
 			v6 = (float)(data->Scale.z + data->Position.z);
 			data->Position.x = data->Scale.x + data->Position.x;
 			data->Position.y = v5;
 			data->Position.z = v6;
-			v4->CollisionArray->param1 = (float)timer * (float)8.0;
+
+
+			colArray->param1 = (float)timer * (float)8.0;
+			data->Collision->CollisionArray[0].attr &= 0xFFFFFFEF;
+			data->Collision->CollisionArray[0].damage |= 3u;
+			data->field_2 = 6;
+			data->Status |= 0x400u;
+
+			col->CollisionArray->center = data->Position;
+
+
 			AddToCollisionList(obj);
 		}
 	}
 	else
 	{
 		data2->Velocity.x = 1.0;
+
 		InitCollision(obj, &Hadoken_Col, 1, 4u);
 
 		data->Action = 1;
@@ -253,7 +268,6 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 	Vector3 a2; // [esp+4h] [ebp-18h] BYREF
 	Vector3 a3; // [esp+10h] [ebp-Ch] BYREF
 
-	co2->Powerups |= Powerups_Invincibility; //Temporary way to not take damage
 
 	if (co2->AnimInfo.Current == punch03Anim)
 	{
@@ -278,7 +292,7 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 					a3.y = 0.0;
 					a3.x = a1->Velocity.x * -0.2;
 					a3.z = a1->Velocity.z * -0.2;
-		
+
 					a3.z = 0.0;
 					a3.x = 0.0;
 
@@ -337,7 +351,7 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 		data1->Collision->CollisionArray->damage |= 0xCu;
 		data1->Collision->CollisionArray[1].attr &= 0xFFFFFFEF;
 		data1->Collision->CollisionArray[1].center = a3;
-		data1->Status |= 4u;
+		data1->Status |= 0x400u;
 	}
 	if (knCombo->hdkvec)
 	{
@@ -426,7 +440,7 @@ void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2)
 		{
 			if (isPlayerPressing_PunchInput(co2))
 			{
-				co2->AnimInfo.Next = curAnim +1;
+				co2->AnimInfo.Next = curAnim + 1;
 				co2->AnimInfo.field_10 = 0.0;
 				return;
 			}
@@ -436,13 +450,16 @@ void Knux_CheckPunchRefresh(EntityData1* data, CharObj2Base* co2)
 			co2->AnimInfo.field_10 = 0.0;
 			return;
 		}
-	} 
+	}
 }
 
 
 signed int Knux_CheckPunchInput(CharObj2Base* co2, EntityData1* data)
 {
-	if (co2->CharID2 == Characters_Tikal || co2->CharID2 == Characters_Chaos || !isCustomAnim || SA1PunchButton == SA2PunchButton && isSA2Punch || !isSA1Punch)
+	int ID = co2->CharID;
+	int ID2 = co2->CharID2;
+
+	if (ID != Characters_Knuckles || ID == Characters_Knuckles && ID2 == Characters_Tikal || !isCustomAnim || SA1PunchButton == SA2PunchButton && isSA2Punch || !isSA1Punch)
 		return 0;
 
 	if (isRoll && RollButton == SA1PunchButton && co2->Speed.x > 1.3) {

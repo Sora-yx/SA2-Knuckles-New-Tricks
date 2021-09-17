@@ -17,7 +17,7 @@ enum customButton {
 
 
 enum knuxAction {
-	Grinding = 86,
+	Grinding = 90,
 	HandGrinding,
 	Action_SA1Rolling,
 	Action_SA1Punch
@@ -37,3 +37,5 @@ void Load_KnuxPunch();
 void DoCollisionAttackStuff(EntityData1* data1);
 void Init_ActionRemap();
 void ReadConfig(const char* path);
+void CheckAndForce_NewAnimList();
+void RestorePhysic(CharObj2Base* co2);

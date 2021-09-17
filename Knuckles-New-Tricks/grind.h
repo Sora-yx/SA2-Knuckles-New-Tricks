@@ -14,7 +14,8 @@ enum KnuxAnimsRail : unsigned __int16 {
 	Anm_RailBalanceR,
 	Anm_RailTrick1, // Awesome
 	Anm_RailTrick2, // Cool
-	Anm_RailTrick3 // Nice
+	Anm_RailTrick3, // Nice
+	Anm_HandGrind = 233
 };
 
 static const void* const sub_45B2C0Ptr = (void*)0x45B2C0;

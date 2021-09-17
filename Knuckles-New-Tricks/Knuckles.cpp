@@ -24,7 +24,7 @@ int Knux_CheckNextActions_original(EntityData2* a1, KnucklesCharObj2* a2, Entity
 
 		// Call your __cdecl function here:
 		call KnuxCheck_ptr
-		add esp, 4 // a4
+		add esp, 4
 		mov result, eax
 	}
 
@@ -58,6 +58,12 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 		a4->AnimInfo.Next = 15;
 		a3->Status &= 0xDFFFu;
 		return 1;
+	case 20: //pulley, fix crash when trying to grab pulley with custom moves.
+		a4->Speed = { 0, 0, 0 };
+		a3->Status &= 0xDAFFu;
+		a3->Action = 51;
+		a4->AnimInfo.Next = 75;
+		return 1;
 	case 28:
 		a3->Action = 56;
 		a3->Status &= 0xDAFFu;
@@ -86,7 +92,8 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 		break;
 	case 38:
 		a3->Action = 6;
-		return 1;;
+		return 1;
+
 	}
 
 	return Knux_CheckNextActions_original(a1, a2, a3, a4);
@@ -112,12 +119,17 @@ static void __declspec(naked) Knux_CheckNextActionsASM()
 	}
 }
 
+
 void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesCharObj2* a3, KnucklesCharObj2* a4) {
+
+	a3->base.AnimInfo.Next = a3->base.AnimInfo.Next;
 
 	FunctionPointer(void, original, (EntityData1 * data1, EntityData2 * data2, KnucklesCharObj2 * a3, KnucklesCharObj2 * a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
 	int currentAnim = a4->base.AnimInfo.Current;
+
+
 
 	switch (data1->Action) {
 
@@ -126,6 +138,15 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
 			return;
+
+		if ((Controllers[a4->base.PlayerNum].on & Buttons_Up) && (Controllers[a4->base.PlayerNum].on & Buttons_Y))
+		{
+			if (Knux_CheckSunglasses(&a4->base))
+				Knux_SetSunglasses(data1, &a4->base);
+
+			return;
+		}
+
 
 		if (Knux_CheckPunchInput(&a4->base, data1))
 			return;
@@ -142,9 +163,11 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 		CheckGrindThing(data1, data2, &a4->base, a3);
 		break;
 	case HandGrinding: //Or whatever you call that thing in CG
+
 		DoHandGrinding(data1, &a4->base);
 		return;
 	case Action_SA1Rolling:
+
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
 			return;
 
@@ -233,7 +256,7 @@ void Knux_Main_r(ObjectMaster* obj)
 
 
 void KnuxTricks_Init() {
-	Knux_Main_t = new Trampoline((int)Knuckles_Main, (int)Knuckles_Main + 0x6, Knux_Main_r);
+	Knux_Main_t = new Trampoline((int)0x728D70, (int)0x728D76, Knux_Main_r);
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
-	Knux_RunsAction_t = new Trampoline((int)Knuckles_ChecksDamage, (int)Knuckles_ChecksDamage + 0x5, Knux_RunsAction_r);
+	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
 }

@@ -429,7 +429,7 @@ signed int SetHandGranding(EntityData2* data2, CharObj2Base* co2, EntityData1* d
 	data2->Forward.y = data1->Rotation.y;
 	data1->Action = HandGrinding;
 	if (isCustomAnim)
-		co2->AnimInfo.Next = 200;
+		co2->AnimInfo.Next = Anm_HandGrind;
 	else
 		co2->AnimInfo.Next = 75;
 	co2->Speed.x += 2.3;

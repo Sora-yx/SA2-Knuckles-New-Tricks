@@ -229,7 +229,7 @@ __declspec(naked) void  CheckBreakBirdBox() {
 
 
 
-	if (MainCharObj1[0]->Action == 78 || isKnuxAttacking())
+	if (MainCharObj1[0]->Action == Action_DrillClaw || isKnuxAttacking())
 	{
 		_asm jmp loc_6A82FF
 	}
@@ -274,19 +274,8 @@ void LoadCharacters_r() {
 	Load_KnuxPunch();
 
 	if (isCharaSelect()) {
-		for (int i = 0; i < 2; i++) {
-			if (MainCharObj1[i]) {
-				if (MainCharObj2[i]->CharID == Characters_Knuckles)
-				{
-					MainCharObj2[i]->AnimInfo.Animations = KnuxAnimationList_R;
-				}
+		CheckAndForce_NewAnimList();
 
-				if (MainCharObj2[i]->CharID == Characters_Rouge)
-				{
-					MainCharObj2[i]->AnimInfo.Animations = RougeAnimationList_R;
-				}
-			}
-		}
 	}
 
 	return;

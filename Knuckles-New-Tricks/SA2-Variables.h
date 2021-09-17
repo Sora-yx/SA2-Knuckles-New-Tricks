@@ -8,3 +8,5 @@ DataPointer(float, GlobalMatColorR, 0x25EFFD4);
 DataPointer(float, GlobalMatColorG, 0x25EFFD8);
 DataPointer(float, GlobalMatColorB, 0x25EFFDC);
 DataPointer(float, GlobalMatColorA, 0x25EFFD0);
+
+DataPointer(char, byte_174AFF8, 0x174AFF8);

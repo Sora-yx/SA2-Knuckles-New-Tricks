@@ -78,6 +78,22 @@ void ResetPlayerSpeed(CharObj2Base* result, EntityData2* a2)
 	}
 }
 
+double sub_77FBA0(NJS_VECTOR* a1, NJS_VECTOR* a2)
+{
+	double v2; // st7
+	double v3; // st7
+	float v5; // [esp+0h] [ebp-4h]
+	float v6; // [esp+0h] [ebp-4h]
+	float v7; // [esp+0h] [ebp-4h]
+
+	v5 = a2->y * a1->y;
+	v2 = v5;
+	v6 = a2->x * a1->x;
+	v3 = v2 + v6;
+	v7 = a2->z * a1->z;
+	return (float)(v3 + v7);
+}
+
 //Giant mess copied pasted from the disassembly, needed to manage the rolling thing.
 int CheckGravityFallThing(EntityData1* a1, EntityData2* a3, CharObj2Base* a4)
 {
@@ -96,23 +112,25 @@ int CheckGravityFallThing(EntityData1* a1, EntityData2* a3, CharObj2Base* a4)
 		return 0;
 	}
 	if (!ControllerEnabled[a4->PlayerNum]
-		|| (curChar = a4->CharID, curChar == 6)
-		|| curChar == 7
+		|| (a4->PreviousSurfaceFlags & SurfaceFlag_Dynamic) != 0
 		|| (curaction = a1->Action, a1->Action != 1)
-		|| HIWORD(a4->field_12)
-		|| a4->PhysData.JogSpeed > (double)a4->Speed.x)
+		|| a4->field_12
+		|| sub_77FBA0(&Gravity, &a4->FloorNormal) >= -0.9847999811172485
+		|| a4->PhysData.JogSpeed > (double)a4->Speed.x
+		|| njScalor(&a4->WallNormal) != 0.0)
 	{
 		if ((curStatus & Status_Ball) != 0)
 		{
 			a1->Action = 6;
 			return 1;
 		}
-		goto LABEL_42;
+		a1->Action = 10;
+		a4->AnimInfo.Next = 15;
+		return 1;
 	}
 	if ((Gravity.y >= -0.9999899864196777 || a1->Position.y - 60.0 < a4->SurfaceInfo.BottomSurface)
 		&& (Gravity.y <= 0.9999899864196777 || a4->SurfaceInfo.TopSurface < a1->Position.y + 60.0))
 	{
-	LABEL_42:
 		a1->Action = 10;
 		a4->AnimInfo.Next = 15;
 		return 1;
@@ -120,15 +138,7 @@ int CheckGravityFallThing(EntityData1* a1, EntityData2* a3, CharObj2Base* a4)
 	a1->Action = 11;
 	a4->AnimInfo.Next = 61;
 	ResetPlayerSpeed(a4, a3);
-	v8 = a4->CharID;
-	if (v8 == 7 || v8 == 6)
-	{
-		v16 = 3;
-	}
-	else
-	{
-		v16 = 2;
-	}
+	v16 = 2;
 	v9 = &a1->Position;
 	v10 = a4->CharID2;
 	a4->IdleTime = 0;
@@ -165,7 +175,7 @@ void UnrollCheck(EntityData1* data1, EntityData2* data2, CharObj2Base* co2) {
 
 void UnrollCheckInput(EntityData1* data1, CharObj2Base* co2) {
 
-	if ((Controllers[co2->PlayerNum].press & RollButton) != 0 && co2->AnimInfo.field_10 > 2.0 || co2->Speed.x < 1.3)
+	if ((Controllers[co2->PlayerNum].press & RollButton) != 0 && co2->AnimInfo.field_10 > 2.0 || co2->Speed.x < 2.0)
 	{
 		RestorePhysic(co2);
 		data1->Action = 1;

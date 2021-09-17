@@ -268,3 +268,30 @@ static inline signed int Knux_SetPunchRunAction(EntityData1* data, CharObj2Base*
 	}
 	return result;
 }
+
+
+static const void* const KnuxSetGlassesPtr = (void*)0x736170;
+static inline void Knux_SetSunglasses(EntityData1* data, CharObj2Base* co2)
+{
+	__asm
+	{
+		mov ebx, [co2]
+		mov eax, [data]
+		call KnuxSetGlassesPtr
+	}
+}
+
+static const void* const KnuxCheckGlassesPtr = (void*)0x735EC0;
+static inline signed int Knux_CheckSunglasses(CharObj2Base* co2)
+{
+	signed int result;
+	__asm
+	{
+		mov eax, [co2]
+		call KnuxCheckGlassesPtr
+		mov result, eax
+	}
+
+	return result;
+}
+
