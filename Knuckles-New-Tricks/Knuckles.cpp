@@ -58,7 +58,7 @@ signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2
 		a4->AnimInfo.Next = 15;
 		a3->Status &= 0xDFFFu;
 		return 1;
-	case 20: //pulley, fix crash when trying to grab pulley with custom moves.
+	case 20: //pulley, fix crash when trying to grab it with custom moves.
 		a4->Speed = { 0, 0, 0 };
 		a3->Status &= 0xDAFFu;
 		a3->Action = 51;
@@ -130,7 +130,6 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	int currentAnim = a4->base.AnimInfo.Current;
 
 
-
 	switch (data1->Action) {
 
 	case Action_None:
@@ -139,14 +138,8 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
 			return;
 
-		if ((Controllers[a4->base.PlayerNum].on & Buttons_Up) && (Controllers[a4->base.PlayerNum].on & Buttons_Y))
-		{
-			if (Knux_CheckSunglasses(&a4->base))
-				Knux_SetSunglasses(data1, &a4->base);
-
+		if (Fast_SunglassesCheckInput(&a4->base, data1))
 			return;
-		}
-
 
 		if (Knux_CheckPunchInput(&a4->base, data1))
 			return;
@@ -259,4 +252,6 @@ void KnuxTricks_Init() {
 	Knux_Main_t = new Trampoline((int)0x728D70, (int)0x728D76, Knux_Main_r);
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
 	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
+
+	init_SunglassesChange();
 }

@@ -161,6 +161,7 @@
     <ClCompile Include="punch.cpp" />
     <ClCompile Include="roll.cpp" />
     <ClCompile Include="startposition.cpp" />
+    <ClCompile Include="sunglasses.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>

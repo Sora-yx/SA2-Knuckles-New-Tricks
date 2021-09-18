@@ -6,6 +6,8 @@ extern int isKnuxAdventure;
 extern bool isRoll;
 extern bool isSA2Punch;
 extern bool isSA1Punch;
+extern bool fastGlasses;
+extern bool noFilter;
 
 extern Buttons SA1PunchButton;
 extern Buttons SA2PunchButton;
@@ -39,3 +41,6 @@ void Init_ActionRemap();
 void ReadConfig(const char* path);
 void CheckAndForce_NewAnimList();
 void RestorePhysic(CharObj2Base* co2);
+signed int Fast_SunglassesCheckInput(CharObj2Base* co2, EntityData1* data1);
+
+void init_SunglassesChange();
