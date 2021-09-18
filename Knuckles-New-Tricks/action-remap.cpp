@@ -2,7 +2,7 @@
 
 //Original Code by SonicFreak94, edited here to let the player change controls of the actions.
 
-//We trampoline "ActionWindow" to take the control of it, since it's an usercall this as always need 3 functions to work.
+//We trampoline "ActionWindow" to take the control of it, since it's an usercall this, as always, need 3 functions to work.
 
 Trampoline* Knux_CheckActionWindow_t;
 
@@ -52,13 +52,12 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 			} while (i < count);
 			action = co2->field_D[0];
 		}
-		if (count != i || (action = co2->ActionWindowItems[0], CurrentLevel != LevelIDs_ChaoWorld) || action != 71 && action != 74 && action != 77)
+		if (count != i || (action = co2->ActionWindowItems[0], CurrentLevel != LevelIDs_ChaoWorld) || action != Action_Punch && action != Action_Punch1Run && action != Action_SpiralUpper)
 		{
-			co2->field_D[1] = action;
 			switch (action)
 			{
 			case Action_Punch:
-
+			{
 				if (!isSA2Punch)
 					return 0;
 
@@ -71,9 +70,11 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 				}
 
 				Knux_SetPunchAction(data1, co2, knuxCO2);
+			}
 				return 1;
 
 			case Action_Punch1Run:
+			{
 
 				if (!isSA2Punch)
 					return 0;
@@ -91,6 +92,7 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 					return 0;
 
 				Knux_SetPunchRunAction(data1, co2, knuxCO2);
+			}
 				return 1;
 			}
 		}
