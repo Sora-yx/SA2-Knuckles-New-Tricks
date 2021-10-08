@@ -58,7 +58,7 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 	a3->Speed.x = v23 + 1.0;
 	a4->Action = Grinding;
 
-	if (isCustomAnim) {
+	if (isCustomAnim && (a3->CharID2 == Characters_Knuckles || a3->CharID2 == Characters_Rouge)) {
 		if ((double)rand() * 0.000030517578125 <= 0.5) {
 			a3->AnimInfo.Next = Anm_RailFastL;
 		}
@@ -269,7 +269,7 @@ void RailAnim_ToRight(CharObj2Base* co2) {
 
 //SA2 hardcode all the grinding animations id
 void PlayGrindAnimation(EntityData1* data1, CharObj2Base* co2) {
-	if (isCustomAnim == false || data1->Action != Grinding || co2->AnimInfo.Next == 15) {
+	if (isCustomAnim == false || data1->Action != Grinding || co2->AnimInfo.Next == 15 || co2->CharID2 != Characters_Knuckles && co2->CharID2 != Characters_Rouge) {
 		return;
 	}
 
@@ -428,7 +428,7 @@ signed int SetHandGranding(EntityData2* data2, CharObj2Base* co2, EntityData1* d
 	//data1->Rotation.y = (atan2f(playerup.x, playerup.z) * 10430.38043493439);
 	data2->Forward.y = data1->Rotation.y;
 	data1->Action = HandGrinding;
-	if (isCustomAnim)
+	if (isCustomAnim && (co2->CharID2 == Characters_Knuckles || co2->CharID2 == Characters_Rouge))
 		co2->AnimInfo.Next = Anm_HandGrind;
 	else
 		co2->AnimInfo.Next = 75;
