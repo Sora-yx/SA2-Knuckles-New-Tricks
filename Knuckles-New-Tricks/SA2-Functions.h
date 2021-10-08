@@ -295,3 +295,21 @@ static inline signed int Knux_CheckSunglasses(CharObj2Base* co2)
 	return result;
 }
 
+
+static const void* const KnuxAnimPtr = (void*)0x734FE0;
+static inline signed int KnuxResetAnim(CharObj2Base* a1, EntityData1* a2, KnucklesCharObj2* a3)
+{
+	signed int result;
+
+	__asm
+	{
+		push[a3]
+		mov esi, [a2]
+		mov eax, [a1]
+		call KnuxAnimPtr
+		add esp, 4
+		mov result, eax
+	}
+
+	return result;
+}

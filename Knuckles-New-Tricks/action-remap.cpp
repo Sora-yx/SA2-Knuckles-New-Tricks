@@ -5,6 +5,7 @@
 //We trampoline "ActionWindow" to take the control of it, since it's an usercall this, as always, need 3 functions to work.
 
 Trampoline* Knux_CheckActionWindow_t;
+Trampoline* Knux_PunchManagement_t;
 
 signed int Knuckles_CheckActionWindow_Origin(CharObj2Base* co2, EntityData2* data2, EntityData1* data1, KnucklesCharObj2* knuxCO2)
 {
@@ -24,10 +25,8 @@ signed int Knuckles_CheckActionWindow_Origin(CharObj2Base* co2, EntityData2* dat
 	return result;
 }
 
-
 static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* data2, EntityData1* data1, KnucklesCharObj2* knuxCO2)
 {
-
 	// This code is based on the pseudocode of the original function
 
 	int  pnum = co2->PlayerNum;
@@ -58,9 +57,6 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 			{
 			case Action_Punch:
 			{
-				if (!isSA2Punch)
-					return 0;
-
 				co2->field_D[1] = action;
 
 				// Just nope right out of here if punch button isn't pressed.
@@ -71,18 +67,14 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 
 				Knux_SetPunchAction(data1, co2, knuxCO2);
 			}
-				return 1;
+			return 1;
 
 			case Action_Punch1Run:
 			{
-
-				if (!isSA2Punch)
-					return 0;
-
 				co2->field_D[1] = action;
 
 				// Just nope right out of here if punch button isn't pressed.
-				if (!(Controllers[pnum].press & SA2PunchButton))
+				if ((Controllers[pnum].press & SA2PunchButton) == 0)
 				{
 					return 0;
 				}
@@ -93,7 +85,7 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 
 				Knux_SetPunchRunAction(data1, co2, knuxCO2);
 			}
-				return 1;
+			return 1;
 			}
 		}
 	}
@@ -122,11 +114,311 @@ static void __declspec(naked) Knuckles_CheckActionWindowASM()
 	}
 }
 
+void Knux_InputCheckPunchRefresh(int pID, int action, KnucklesCharObj2* knuxCo2) {
+
+	if ((Controllers[pID].press & SA2PunchButton))
+	{
+		knuxCo2->field_1BC[417] = action;
+	}
+	else if (((Controllers[pID].on & SA2PunchButton) == 0) && knuxCo2->field_1BC[417] != action)
+	{
+		knuxCo2->field_1BC[417] = Action_Run;
+	}
+}
+
+//Hack to customise punch button, this is based on ida's pseudcode.
+
+signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, CharObj2Base* co2)
+{
+	char action; // al
+	__int16 FieldCopy; // dx
+	char field1BCCopy;
+	int pID; // eax
+	char ActionCopy; // al
+	int soundID; // esi
+	int vibeID; // eax
+	signed int result; // eax
+	char Sound3DID; // al
+	char getAction;
+	int Sound3DID3;
+	char AltCostume; // al
+	NJS_VECTOR* PlayerPos; // esi
+	bool isActionHeld; // zf
+	int VibeID2; // [esp-4h] [ebp-14h]
+
+	action = data->Action;
+	if (action != Action_Punch3 && action != Action_Punch3Run && ((data->Status & (Status_OnObjectColli | Status_Ground)) == 0
+		|| (data->Status & Status_HoldObject) != 0 || action == Action_DrillClaw))
+	{
+		return 0;
+	}
+
+	FieldCopy = ++ * (WORD*)&knuxCo2->field_1BC[488];
+	switch (data->Action)
+	{
+	case Action_Punch:
+		pID = co2->PlayerNum;
+
+		Knux_InputCheckPunchRefresh(pID, Action_Punch2, knuxCo2);
+
+		if ((co2->AnimInfo.field_C & 1) == 0)
+		{
+			return 0;
+		}
+
+		ActionCopy = knuxCo2->field_1BC[417];
+		data->Action = ActionCopy;
+
+		if (ActionCopy == Action_Run)
+		{
+			KnuxResetAnim(co2, data, knuxCo2);
+			return 1;
+		}
+		knuxCo2->field_1BC[417] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		if (co2->CharID2 == Characters_Chaos)
+		{
+			soundID = 8217;
+		}
+		soundID = 8203;
+		if (co2->CharID != Characters_Knuckles)
+		{
+			soundID = 8205;
+		}
+
+		PlaySoundProbably(soundID, 0, 0, 0);
+		VibeID2 = 6;
+		vibeID = 0;
+		VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+		result = 1;
+		break;
+	case Action_Punch2:
+		pID = co2->PlayerNum;
+
+		Knux_InputCheckPunchRefresh(pID, Action_Punch3, knuxCo2);
+
+		if ((co2->AnimInfo.field_C & 2) == 0)
+		{
+			return 0;
+		}
+		field1BCCopy = knuxCo2->field_1BC[417];
+		data->Action = field1BCCopy;
+		if (field1BCCopy != Action_Punch3)
+		{
+			KnuxResetAnim(co2, data, knuxCo2);
+			return 1;
+		}
+		knuxCo2->field_1BC[417] = 1;
+		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		co2->Speed.y = 2.4000001;
+		if (co2->CharID2 == Characters_Chaos)
+		{
+			PlaySoundProbably(8218, 0, 0, 0);
+			VibeThing(1, 15, co2->PlayerNum, 3);
+			result = 1;
+			break;
+		}
+		if (co2->CharID == Characters_Knuckles)
+		{
+			PlaySoundProbably(8204, 0, 0, 0);
+			AltCostume = co2->CharID2;
+			if (AltCostume == Characters_Knuckles)
+			{
+				PlayerPos = &data->Position;
+				Sound3DID3 = 12295;
+			}
+			else
+			{
+				if (AltCostume != Characters_Tikal)
+				{
+					VibeThing(1, 15, co2->PlayerNum, 3);
+					result = 1;
+					break;
+				}
+				PlayerPos = &data->Position;
+				Sound3DID3 = 12324;
+			}
+		}
+		else
+		{
+			PlaySoundProbably(8206, 0, 0, 0);
+			if (co2->CharID2 != Characters_Rouge)
+			{
+				VibeThing(1, 15, co2->PlayerNum, 3);
+				result = 1;
+				break;
+			}
+			PlayerPos = &data->Position;
+			Sound3DID3 = 12312;
+		}
+		Play3DSound_Pos(Sound3DID3, PlayerPos, 0, 0, 127);
+		//LABEL_65:
+		VibeThing(1, 15, co2->PlayerNum, 3);
+		result = 1;
+		break;
+	case Action_Punch3:
+		isActionHeld = co2->Speed.y <= 0.0;
+		if (!isActionHeld)
+		{
+			return 0;
+		}
+		KnuxResetAnim(co2, data, knuxCo2);
+		return 1;
+	case Action_Punch1Run:
+		pID = co2->PlayerNum;
+
+		Knux_InputCheckPunchRefresh(pID, Action_Punch2Run, knuxCo2);
+
+		if ((co2->AnimInfo.field_C & 1) == 0)
+		{
+			return 0;
+		}
+		getAction = knuxCo2->field_1BC[417];
+		data->Action = getAction;
+		if (getAction == 1)
+		{
+			KnuxResetAnim(co2, data, knuxCo2);
+			return 1;
+		}
+		knuxCo2->field_1BC[417] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		if (co2->CharID2 == Characters_Chaos)
+		{
+			soundID = 8217;
+		}
+		else
+		{
+			soundID = 8203;
+			if (co2->CharID != Characters_Knuckles)
+			{
+				soundID = 8205;
+			}
+		}
+		PlaySoundProbably(soundID, 0, 0, 0);
+		VibeID2 = 6;
+		vibeID = 0;
+		VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+		result = 1;
+		break;
+	case Action_Punch2Run:
+		pID = co2->PlayerNum;
+
+		Knux_InputCheckPunchRefresh(pID, Action_Punch3Run, knuxCo2);
+
+		if ((co2->AnimInfo.field_C & 2) == 0)
+		{
+			return 0;
+		}
+		field1BCCopy = knuxCo2->field_1BC[417];
+		data->Action = field1BCCopy;
+		if (field1BCCopy != Action_Punch3Run)
+		{
+			KnuxResetAnim(co2, data, knuxCo2);
+			return 1;
+		}
+		knuxCo2->field_1BC[417] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		if (co2->CharID2 == Characters_Chaos)
+		{
+			PlaySoundProbably(8217, 0, 0, 0);
+			VibeID2 = 4;
+			vibeID = 1;
+			VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+			result = 1;
+		}
+		if (co2->CharID == Characters_Knuckles)
+		{
+			PlaySoundProbably(8204, 0, 0, 0);
+			AltCostume = co2->CharID2;
+			if (AltCostume == Characters_Knuckles)
+			{
+				PlayerPos = &data->Position;
+				Sound3DID = 12295;
+			}
+			else
+			{
+				if (AltCostume != Characters_Tikal)
+				{
+					VibeID2 = 4;
+					vibeID = 1;
+					VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+					result = 1;
+					break;
+				}
+				PlayerPos = &data->Position;
+				Sound3DID = 12324;
+			}
+		}
+		else
+		{
+			PlaySoundProbably(8206, 0, 0, 0);
+			if (co2->CharID2 != Characters_Rouge)
+			{
+				VibeID2 = 4;
+				vibeID = 1;
+				VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+				result = 1;
+				break;
+			}
+			PlayerPos = &data->Position;
+			Sound3DID = 12312;
+		}
+		Play3DSound_Pos(Sound3DID, PlayerPos, 0, 0, 127);
+		//LABEL_47:
+		VibeID2 = 4;
+		vibeID = 1;
+		VibeThing(vibeID, 30, co2->PlayerNum, VibeID2);
+		result = 1;
+		break;
+	case Action_Punch3Run:
+		if (FieldCopy > 40)
+		{
+			KnuxResetAnim(co2, data, knuxCo2);
+			return 1;
+		}
+		if (FieldCopy <= 10)
+		{
+			return 0;
+		}
+		pID = co2->PlayerNum;
+		isActionHeld = ((Controllers[pID].on & SA2PunchButton)) == 0;
+
+		if (!isActionHeld)
+		{
+			return 0;
+		}
+		KnuxResetAnim(co2, data, knuxCo2);
+		return 1;
+	default:
+		return 0;
+	}
+	return result;
+}
+
+static void __declspec(naked) Knux_PunchManagementASM()
+{
+	__asm
+	{
+		push[esp + 04h] // a3
+		push ecx // a2
+		push eax // a1
+
+		// Call your __cdecl function here:
+		call Knux_PunchManagement_r
+
+		add esp, 4 // a1<eax> is also used for return value
+		pop ecx // a2
+		add esp, 4 // a3
+		retn
+	}
+}
+
 
 void Init_ActionRemap() {
 
-	if (SA2PunchButton == buttons_XB && isSA2Punch) //if vanilla input
+	if (SA2PunchButton == buttons_XB)  //if vanilla input
 		return;
 
 	Knux_CheckActionWindow_t = new Trampoline((int)0x7338F0, (int)0x7338FB, Knuckles_CheckActionWindowASM);
+	Knux_PunchManagement_t = new Trampoline((int)0x734AA0, (int)0x734AA6, Knux_PunchManagementASM);
 }

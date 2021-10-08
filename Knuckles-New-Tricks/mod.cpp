@@ -20,7 +20,7 @@ extern "C" {
 		Init_NewAnimation();
 		Init_ActionRemap();
 	}
-
+	
 	__declspec(dllexport) void __cdecl OnFrame() {
 
 	}

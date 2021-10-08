@@ -6,7 +6,6 @@ Buttons RollButton = Buttons_B;
 
 bool isCustomAnim = true;
 bool isRoll = true;
-bool isSA2Punch = true;
 bool isSA1Punch = true;
 bool fastGlasses = false;
 bool noFilter = true;
@@ -26,7 +25,6 @@ void ReadConfig(const char* path)
 	isCustomAnim = config->getBool("General", "isCustomAnim", true);
 	isSA1Punch = config->getBool("General", "isSA1Punch", true);
 	isRoll = config->getBool("General", "isRoll", true);
-	isSA2Punch = config->getBool("General", "isSA2Punch", true);
 	fastGlasses = config->getBool("General", "fastGlasses", false);
 	noFilter = config->getBool("General", "noFilter", true);
 

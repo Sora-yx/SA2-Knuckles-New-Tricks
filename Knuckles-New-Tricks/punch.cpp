@@ -405,6 +405,7 @@ void KnuxComboAction(EntityData2* a1, CharObj2Base* co2, EntityData1* data1)
 		else if (co2->AnimInfo.Current == punch03Anim)
 		{
 			PlaySoundProbably(8204, 0, 0, 0);
+			PlaySoundProbably(12295, 0, 0, 0);
 		}
 	}
 	if (knCombo->eff_start >= 0.0
@@ -459,10 +460,10 @@ signed int Knux_CheckPunchInput(CharObj2Base* co2, EntityData1* data)
 	int ID = co2->CharID;
 	int ID2 = co2->CharID2;
 
-	if (ID != Characters_Knuckles || ID == Characters_Knuckles && ID2 == Characters_Tikal || !isCustomAnim || SA1PunchButton == SA2PunchButton && isSA2Punch || !isSA1Punch)
+	if (ID != Characters_Knuckles || ID2 != Characters_Knuckles || !isCustomAnim || SA1PunchButton == SA2PunchButton && ID2 != Characters_Knuckles || !isSA1Punch)
 		return 0;
 
-	if (isRoll && RollButton == SA1PunchButton && co2->Speed.x > 1.3) {
+	if ( (isRoll && RollButton == SA1PunchButton && co2->Speed.x > 1.3) || (CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea != 7)) {
 		return 0;
 	}
 

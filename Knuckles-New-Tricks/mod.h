@@ -4,7 +4,6 @@ extern HelperFunctions HelperFunctionsGlobal;
 extern bool isCustomAnim;
 extern int isKnuxAdventure;
 extern bool isRoll;
-extern bool isSA2Punch;
 extern bool isSA1Punch;
 extern bool fastGlasses;
 extern bool noFilter;

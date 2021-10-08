@@ -135,7 +135,8 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	case Action_None:
 	case Action_Run:
 
-		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
+
+		if (data1->NextAction != 0 || (data1->Status & Status_DoNextAction))
 			return;
 
 		if (Fast_SunglassesCheckInput(&a4->base, data1))
@@ -150,25 +151,31 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 		break;
 	case Grinding:
 
-		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
+		if (data1->NextAction != 0 || (data1->Status & Status_DoNextAction))
 			return;
 
 		CheckGrindThing(data1, data2, &a4->base, a3);
 		break;
 	case HandGrinding: //Or whatever you call that thing in CG
 
+		if (data1->NextAction != 0 || (data1->Status & Status_DoNextAction))
+			return;
+
 		DoHandGrinding(data1, &a4->base);
 		return;
 	case Action_SA1Rolling:
 
-		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base))
+		if (data1->NextAction != 0 || (data1->Status & Status_DoNextAction))
 			return;
 
 		UnrollCheck(data1, data2, &a4->base);
 		break;
 	case Action_SA1Punch:
 
-		if (Knux_CheckNextActions_r(data2, a3, data1, &a4->base) || (a4->base.AnimInfo.Current) == 0 || a4->base.AnimInfo.Current == 8) {
+		if (data1->NextAction != 0 || (data1->Status & Status_DoNextAction))
+			return;
+
+		if ((a4->base.AnimInfo.Current) == 0 || a4->base.AnimInfo.Current == 8) {
 
 			data1->Collision->CollisionArray[1].attr |= 0x10u;
 			if (data1->Action != Action_Death)
@@ -176,6 +183,7 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 				data1->Action = Action_None;
 				data1->Status &= 0xFBFFu;
 			}
+
 			return;
 		}
 
@@ -254,4 +262,7 @@ void KnuxTricks_Init() {
 	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
 
 	init_SunglassesChange();
+
+	//WriteData<1>((int*)0x443130, 0xC3);
+
 }
