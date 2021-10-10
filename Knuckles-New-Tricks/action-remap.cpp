@@ -114,7 +114,7 @@ static void __declspec(naked) Knuckles_CheckActionWindowASM()
 	}
 }
 
-void Knux_InputCheckPunchRefresh(int pID, int action, KnucklesCharObj2* knuxCo2) {
+void Knux_InputCheckPunchRefresh(int pID, char action, KnucklesCharObj2* knuxCo2) {
 
 	if ((Controllers[pID].press & SA2PunchButton))
 	{
@@ -130,23 +130,21 @@ void Knux_InputCheckPunchRefresh(int pID, int action, KnucklesCharObj2* knuxCo2)
 
 signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, CharObj2Base* co2)
 {
-	char action; // al
+	
 	__int16 FieldCopy; // dx
-	char field1BCCopy;
 	int pID; // eax
-	char ActionCopy; // al
 	int soundID; // esi
 	int vibeID; // eax
 	signed int result; // eax
 	char Sound3DID; // al
-	char getAction;
 	int Sound3DID3;
 	char AltCostume; // al
 	NJS_VECTOR* PlayerPos; // esi
 	bool isActionHeld; // zf
+	bool isSpeed;
 	int VibeID2; // [esp-4h] [ebp-14h]
 
-	action = data->Action;
+	char action = data->Action;
 	if (action != Action_Punch3 && action != Action_Punch3Run && ((data->Status & (Status_OnObjectColli | Status_Ground)) == 0
 		|| (data->Status & Status_HoldObject) != 0 || action == Action_DrillClaw))
 	{
@@ -159,23 +157,22 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 	case Action_Punch:
 		pID = co2->PlayerNum;
 
-		Knux_InputCheckPunchRefresh(pID, Action_Punch2, knuxCo2);
+		Knux_InputCheckPunchRefresh(pID, (char)Action_Punch2, knuxCo2);
 
 		if ((co2->AnimInfo.field_C & 1) == 0)
 		{
 			return 0;
 		}
 
-		ActionCopy = knuxCo2->field_1BC[417];
-		data->Action = ActionCopy;
+		data->Action = knuxCo2->field_1BC[417];
 
-		if (ActionCopy == Action_Run)
+		if (data->Action == Action_Run)
 		{
-			KnuxResetAnim(co2, data, knuxCo2);
+			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
 		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			soundID = 8217;
@@ -195,21 +192,21 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 	case Action_Punch2:
 		pID = co2->PlayerNum;
 
-		Knux_InputCheckPunchRefresh(pID, Action_Punch3, knuxCo2);
+		Knux_InputCheckPunchRefresh(pID, (char)Action_Punch3, knuxCo2);
 
 		if ((co2->AnimInfo.field_C & 2) == 0)
 		{
 			return 0;
 		}
-		field1BCCopy = knuxCo2->field_1BC[417];
-		data->Action = field1BCCopy;
-		if (field1BCCopy != Action_Punch3)
+
+		data->Action = knuxCo2->field_1BC[417];
+		if (data->Action != Action_Punch3)
 		{
-			KnuxResetAnim(co2, data, knuxCo2);
+			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
-		knuxCo2->field_1BC[417] = 1;
-		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		knuxCo2->field_1BC[417] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
 		co2->Speed.y = 2.4000001;
 		if (co2->CharID2 == Characters_Chaos)
 		{
@@ -257,31 +254,31 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 		result = 1;
 		break;
 	case Action_Punch3:
-		isActionHeld = co2->Speed.y <= 0.0;
-		if (!isActionHeld)
+		isSpeed = co2->Speed.y <= 0.0;
+		if (!isSpeed)
 		{
 			return 0;
 		}
-		KnuxResetAnim(co2, data, knuxCo2);
+		KnuxResetActionAnim(co2, data, knuxCo2);
 		return 1;
 	case Action_Punch1Run:
 		pID = co2->PlayerNum;
 
-		Knux_InputCheckPunchRefresh(pID, Action_Punch2Run, knuxCo2);
+		Knux_InputCheckPunchRefresh(pID, (char)Action_Punch2Run, knuxCo2);
 
 		if ((co2->AnimInfo.field_C & 1) == 0)
 		{
 			return 0;
 		}
-		getAction = knuxCo2->field_1BC[417];
-		data->Action = getAction;
-		if (getAction == 1)
+
+		data->Action = knuxCo2->field_1BC[417];
+		if (data->Action == Action_Run)
 		{
-			KnuxResetAnim(co2, data, knuxCo2);
+			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
 		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			soundID = 8217;
@@ -303,21 +300,20 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 	case Action_Punch2Run:
 		pID = co2->PlayerNum;
 
-		Knux_InputCheckPunchRefresh(pID, Action_Punch3Run, knuxCo2);
+		Knux_InputCheckPunchRefresh(pID, (char)Action_Punch3Run, knuxCo2);
 
 		if ((co2->AnimInfo.field_C & 2) == 0)
 		{
 			return 0;
 		}
-		field1BCCopy = knuxCo2->field_1BC[417];
-		data->Action = field1BCCopy;
-		if (field1BCCopy != Action_Punch3Run)
+		data->Action = knuxCo2->field_1BC[417];
+		if (data->Action != Action_Punch3Run)
 		{
-			KnuxResetAnim(co2, data, knuxCo2);
+			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
 		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = 0;
+		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			PlaySoundProbably(8217, 0, 0, 0);
@@ -373,7 +369,7 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 	case Action_Punch3Run:
 		if (FieldCopy > 40)
 		{
-			KnuxResetAnim(co2, data, knuxCo2);
+			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
 		if (FieldCopy <= 10)
@@ -387,7 +383,7 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 		{
 			return 0;
 		}
-		KnuxResetAnim(co2, data, knuxCo2);
+		KnuxResetActionAnim(co2, data, knuxCo2);
 		return 1;
 	default:
 		return 0;
