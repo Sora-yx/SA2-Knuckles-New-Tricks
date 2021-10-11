@@ -118,11 +118,11 @@ void Knux_InputCheckPunchRefresh(int pID, char action, KnucklesCharObj2* knuxCo2
 
 	if ((Controllers[pID].press & SA2PunchButton))
 	{
-		knuxCo2->field_1BC[417] = action;
+		knuxCo2->field_1BC[413] = action;
 	}
-	else if (((Controllers[pID].on & SA2PunchButton) == 0) && knuxCo2->field_1BC[417] != action)
+	else if (((Controllers[pID].on & SA2PunchButton) == 0) && knuxCo2->field_1BC[413] != action)
 	{
-		knuxCo2->field_1BC[417] = Action_Run;
+		knuxCo2->field_1BC[413] = Action_Run;
 	}
 }
 
@@ -151,7 +151,7 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 		return 0;
 	}
 
-	FieldCopy = ++ * (WORD*)&knuxCo2->field_1BC[488];
+	FieldCopy = ++*(WORD*)&knuxCo2->field_1BC[484];
 	switch (data->Action)
 	{
 	case Action_Punch:
@@ -164,15 +164,15 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 			return 0;
 		}
 
-		data->Action = knuxCo2->field_1BC[417];
+		data->Action = knuxCo2->field_1BC[413];
 
 		if (data->Action == Action_Run)
 		{
 			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
-		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
+		knuxCo2->field_1BC[413] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[484] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			soundID = 8217;
@@ -199,14 +199,14 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 			return 0;
 		}
 
-		data->Action = knuxCo2->field_1BC[417];
+		data->Action = knuxCo2->field_1BC[413];
 		if (data->Action != Action_Punch3)
 		{
 			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
-		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
+		knuxCo2->field_1BC[413] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[484] = Action_None;
 		co2->Speed.y = 2.4000001;
 		if (co2->CharID2 == Characters_Chaos)
 		{
@@ -271,14 +271,14 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 			return 0;
 		}
 
-		data->Action = knuxCo2->field_1BC[417];
+		data->Action = knuxCo2->field_1BC[413];
 		if (data->Action == Action_Run)
 		{
 			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
-		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
+		knuxCo2->field_1BC[413] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[484] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			soundID = 8217;
@@ -306,14 +306,14 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 		{
 			return 0;
 		}
-		data->Action = knuxCo2->field_1BC[417];
+		data->Action = knuxCo2->field_1BC[413];
 		if (data->Action != Action_Punch3Run)
 		{
 			KnuxResetActionAnim(co2, data, knuxCo2);
 			return 1;
 		}
-		knuxCo2->field_1BC[417] = Action_Run;
-		*(WORD*)&knuxCo2->field_1BC[488] = Action_None;
+		knuxCo2->field_1BC[413] = Action_Run;
+		*(WORD*)&knuxCo2->field_1BC[484] = Action_None;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			PlaySoundProbably(8217, 0, 0, 0);
