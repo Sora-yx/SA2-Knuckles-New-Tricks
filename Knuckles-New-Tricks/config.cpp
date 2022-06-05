@@ -9,6 +9,7 @@ bool isRoll = true;
 bool isSA1Punch = true;
 bool fastGlasses = false;
 bool noFilter = true;
+uint8_t alwaysHunter = 0;
 
 
 static const Buttons ButtonsList[]
@@ -27,6 +28,7 @@ void ReadConfig(const char* path)
 	isRoll = config->getBool("General", "isRoll", true);
 	fastGlasses = config->getBool("General", "fastGlasses", false);
 	noFilter = config->getBool("General", "noFilter", true);
+	alwaysHunter = config->getInt("General", "alwaysHunter", 0);
 
 	SA1PunchButton = ButtonsList[config->getInt("ActionRemap", "SA1PunchButton", 0)];
 	RollButton = ButtonsList[config->getInt("ActionRemap", "RollButton", 0)];
@@ -37,5 +39,4 @@ void ReadConfig(const char* path)
 	if (SA1PunchButton == SA2PunchButton || RollButton == SA2PunchButton) {
 		PrintDebug("ERROR: Same Input detected! Custom attacks won't work.");
 	}
-
 }

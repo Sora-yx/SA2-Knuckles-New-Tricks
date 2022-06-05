@@ -3,10 +3,12 @@
 #include "punch.h"
 #include "roll.h"
 
-Trampoline* Knux_Main_t;
-Trampoline* Knux_CheckNextActions_t;
-Trampoline* Knux_RunsAction_t;
-
+Trampoline* Knux_Main_t = nullptr;
+Trampoline* Knux_CheckNextActions_t = nullptr;
+Trampoline* Knux_RunsAction_t = nullptr;
+Trampoline* LoadCharacters_t = nullptr;
+Trampoline* LoadKnuckles_t = nullptr;
+Trampoline* LoadRouge_t = nullptr;
 
 //Trampoline Usercall Function to get the control of "Check Next Actions" this need 3 functions to work.
 
@@ -55,6 +57,12 @@ signed int __cdecl Knux_CheckNextActions_r(KnucklesCharObj2* knuxCO2, EntityData
 		data1->Action = 10;
 		co2->AnimInfo.Next = 15;
 		data1->Status &= 0xDFFFu;
+		return 1;
+	case 7:
+		data1->Action = 9;
+		co2->AnimInfo.Next = 13;
+		data1->Status &= 0xDAFFu;
+		co2->Speed.y += 0.070f; //somehow the hunters need that small boost otherwise they don't make it
 		return 1;
 	case 28:
 		data1->Action = 56;
@@ -115,6 +123,7 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	original(data1, data2, a3, a4);
 
 	int currentAnim = a4->base.AnimInfo.Current;
+	CharObj2Base* co2 = &a4->base;
 
 	if (Knux_CheckNAct(a3, data2, data1, &a4->base))
 	{
@@ -136,6 +145,39 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 			return;
 
 		break;
+	case Action_Launch: //used for vines and mh rocket
+	{
+		if ((data1->Status & 3) != 0 )
+		{
+			PlaySoundProbably(8195, 0, 0, 0);
+			if (PlayerCheckBreakMaybe(data1, co2) && co2->Speed.x > 0.0f)
+			{
+				data1->Action = 12;
+				co2->AnimInfo.field_8 = 0;
+				co2->AnimInfo.Next = 18;
+			}
+			else if (CheckPlayerStop(data1, co2, data2))
+			{
+				data1->Rotation.x = data2->Forward.x;
+				data1->Rotation.z = data2->Forward.z;
+				if (njScalor(&data2->Velocity) < 2.5f)
+				{
+					co2->AnimInfo.Next = 1;
+				}
+				else {
+					co2->AnimInfo.Next = 16;
+				}
+			}
+			else
+			{
+				data1->Rotation.x = data2->Forward.x;
+				data1->Rotation.z = data2->Forward.z;
+				data1->Action = 1;
+				somethingAboutTrick3(co2, data1);
+			}
+		}
+	}
+		return;
 	case Grinding:
 
 		CheckGrindThing(data1, data2, &a4->base, a3);
@@ -185,6 +227,12 @@ void Knux_Main_r(ObjectMaster* obj)
 
 	switch (data1->Action) {
 
+	case Action_Launch:
+		PGetGravityMaybe(data1, data2, co2);
+		PGetSpeed(data1, co2, data2);
+		PSetPosition(data1, data2, co2);
+		PResetPosition(data1, data2, co2);
+		break;
 	case Grinding:
 		DoGrindThing(data1, data2, co2, co2Knux);
 		PlayGrindAnimation(data1, co2); //not called by the game, custom function to play animation for Knux
@@ -231,10 +279,72 @@ void Knux_Main_r(ObjectMaster* obj)
 }
 
 
+int BannedHunterLevel[6] = { LevelIDs_FinalHazard, LevelIDs_Route101280, LevelIDs_KartRace, 
+LevelIDs_EggGolemE, LevelIDs_TailsVsEggman1, LevelIDs_TailsVsEggman2 };
+
+bool isLevelBanned() {
+	for (int i = 0; i < LengthOfArray(BannedHunterLevel); i++)
+	{
+		if (CurrentLevel == BannedHunterLevel[i])
+			return true;
+	}
+
+	return false;
+}
+
+void LoadCharacter_r() {
+
+	if (!isLevelBanned() && alwaysHunter > 0 && !TwoPlayerMode)
+	{
+		if (alwaysHunter == Characters_Tikal)
+			CurrentCharacter = Characters_Knuckles;
+		else if (alwaysHunter == Characters_Chaos)
+			CurrentCharacter = Characters_Rouge;
+		else
+			CurrentCharacter = alwaysHunter;
+	}
+
+	auto original = reinterpret_cast<decltype(LoadCharacter_r)*>(LoadCharacters_t->Target());
+	original();
+
+	return;
+}
+
+void LoadKnuckles_r(int playNum)
+{
+	if (!TwoPlayerMode && !playNum && !isLevelBanned() && alwaysHunter == Characters_Tikal)
+	{
+		LoadTikal(playNum);
+		return;
+	}
+
+	FunctionPointer(void, original, (int playerNum), LoadKnuckles_t->Target());
+	return original(playNum);
+}
+
+void LoadRouge_r(int playNum)
+{
+	if (!TwoPlayerMode && !playNum && !isLevelBanned() && alwaysHunter == Characters_Chaos)
+	{
+		LoadChaos(playNum);
+		return;
+	}
+
+
+	FunctionPointer(void, original, (int playerNum), LoadRouge_t->Target());
+	return original(playNum);
+}
+
 void KnuxTricks_Init() {
 	Knux_Main_t = new Trampoline((int)0x728D70, (int)0x728D76, Knux_Main_r);
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
 	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
+
+	if (alwaysHunter != 0) {
+		LoadKnuckles_t = new Trampoline((int)LoadKnuckles, (int)LoadKnuckles + 0x6, LoadKnuckles_r);
+		LoadRouge_t = new Trampoline((int)LoadRouge, (int)LoadRouge + 0x6, LoadRouge_r);
+		LoadCharacters_t = new Trampoline((int)LoadCharacters, (int)LoadCharacters + 0x6, LoadCharacter_r);
+	}
 
 	init_SunglassesChange();
 

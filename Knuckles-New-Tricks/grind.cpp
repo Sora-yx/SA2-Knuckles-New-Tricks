@@ -321,7 +321,7 @@ void CheckScoreTrick(EntityData1* data1, CharObj2Base* co2, EntityData2* data2, 
 		}
 	}
 	PlaySoundProbably(curSound, 0, 0, 0);
-	if (PlayerCheckBreakMaybe(idk, data1, co2) && co2->Speed.x > 0.0)
+	if (PlayerCheckBreakMaybe(data1, co2) && co2->Speed.x > 0.0)
 	{
 		data1->Action = 12;
 		idk2 = 18;
@@ -331,7 +331,7 @@ void CheckScoreTrick(EntityData1* data1, CharObj2Base* co2, EntityData2* data2, 
 	}
 	else
 	{
-		if (CheckPlayerStopASM(data1, co2, data2))
+		if (CheckPlayerStop(data1, co2, data2))
 		{
 			data1->Rotation.x = data2->Forward.x;
 			data1->Rotation.z = data2->Forward.z;

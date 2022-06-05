@@ -48,3 +48,4 @@ void init_SunglassesChange();
 extern HMODULE SA1Char;
 void init_Patches();
 void Load_KnuxNewAnim();
+extern uint8_t alwaysHunter;

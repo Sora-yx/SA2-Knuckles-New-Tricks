@@ -22,34 +22,29 @@ static inline char Play3DSoundPosThing(int id, NJS_VECTOR* pos, int a3, char a4,
 
 
 static const void* const somethingAboutTrickPtr = (void*)0x45ABE0;
-static inline bool PlayerCheckBreakMaybe(int a1, EntityData1* a2, CharObj2Base* a3)
+static inline bool PlayerCheckBreakMaybe(EntityData1* a1, CharObj2Base* a2)
 {
 	int result;
 	__asm
 	{
-		mov esi, [a3] // a3
-		mov edi, [a2] // a2
-		mov ecx, [a1] // a1
-
-		// Call your __cdecl function here:
+		mov esi, [a2] // a2
+		mov edi, [a1] // a1:
 		call somethingAboutTrickPtr
-		mov result, ecx
+		mov result, eax
 	}
 	return result;
 }
 
-static const void* const somethingAboutTrick2Ptr = (void*)0x475100;
-static inline signed int CheckPlayerStopASM(EntityData1* a1, CharObj2Base* a2, EntityData2* a4)
+static const void* const CheckPlayerStopPtr = (void*)0x475100;
+static inline signed int CheckPlayerStop(EntityData1* a1, CharObj2Base* a2, EntityData2* a4)
 {
 	signed int result;
 	__asm
 	{
 		push[a4]
-		mov esi, [a2] // a2
-		mov eax, [a1] // a1
-
-		// Call your __cdecl function here:
-		call somethingAboutTrick2Ptr
+		mov esi, [a2] 
+		mov eax, [a1] 
+		call CheckPlayerStopPtr
 		add esp, 4
 		mov result, eax
 	}
@@ -231,5 +226,35 @@ static inline int Knux_CheckNAct(KnucklesCharObj2* a1, EntityData2* a2, EntityDa
 		mov result, eax
 	}
 
+	return result;
+}
+
+
+static const void* const PGetGravityPtr = (void*)0x45F9E0;
+static inline void PGetGravityMaybe(EntityData1* a1, EntityData2* data2, CharObj2Base* a3)
+{
+	__asm
+	{
+		mov ebx, [a3]
+		mov eax, [data2]
+		mov ecx, [a1]
+		call PGetGravityPtr
+	}
+}
+
+static const void* const KnuxCheckWindowPtr = (void*)0x7338F0;
+static signed int Knux_CheckActionWindow_(CharObj2Base* co2, EntityData2* data2, EntityData1* data1, KnucklesCharObj2* knuxCO2)
+{
+	signed int result;
+	__asm
+	{
+		push[knuxCO2]
+		push[data1]
+		mov edx, [data2]
+		mov eax, [co2]
+		call KnuxCheckWindowPtr
+		add esp, 8
+		mov result, eax
+	}
 	return result;
 }
