@@ -10,3 +10,5 @@ DataPointer(float, GlobalMatColorB, 0x25EFFDC);
 DataPointer(float, GlobalMatColorA, 0x25EFFD0);
 
 DataPointer(char, byte_174AFF8, 0x174AFF8);
+
+DataPointer(KnucklesCharObj2*, KnuxCharObj2Ptr, 0x1A51C88);

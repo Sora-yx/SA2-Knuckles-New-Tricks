@@ -78,3 +78,71 @@ void njAddVector(NJS_VECTOR* vd, NJS_VECTOR* vs)
 	vd->y += vs->y;
 	vd->z += vs->z;
 }
+
+typedef bool (*isChar) (uint8_t charID);
+bool isSA1Char(uint8_t charID) {
+
+	if (!SA1Char)
+		return false;
+
+	isChar Obj = (isChar)GetProcAddress(SA1Char, "isSA1Char");
+
+	if (Obj)
+	{
+		return Obj(charID);
+	}
+
+	return false;
+}
+
+bool isHuntingCharacter() {
+
+	if (!KnuxCharObj2Ptr || MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Knuckles || MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Rouge)
+		return true;
+
+	return false;
+}
+
+
+bool isKnuxAttacking() {
+
+	if (!isHuntingCharacter())
+		return false;
+
+	EntityData1* data1 = MainCharObj1[KnuxCharObj2Ptr->base.PlayerNum];
+
+	if (data1->Action == Action_Glide || data1->Action >= Action_Punch && data1->Action <= Action_DrillClaw || data1->Action == Action_Jump || data1->Action == Action_SA1Rolling || data1->Action == Action_SA1Punch) {
+
+		return true;
+	}
+
+
+	return false;
+}
+
+
+bool isAttackingBoxes() {
+
+	if (!isHuntingCharacter())
+		return false;
+
+	EntityData1* data1 = MainCharObj1[KnuxCharObj2Ptr->base.PlayerNum];;
+
+	if (data1->Action >= Action_Punch && data1->Action <= Action_Punch3Run || data1->Action == Action_SA1Rolling
+		|| data1->Action == Action_SA1Punch) {
+
+		return true;
+	}
+
+	return false;
+}
+
+void DoCollisionAttackStuff(EntityData1* data1) {
+	data1->Status |= Status_Attack;
+	data1->Collision->CollisionArray[0].damage &= 0xFCu;
+	data1->Collision->CollisionArray[0].damage |= 0xCu;
+	data1->Collision->CollisionArray[0].damage |= 0xEF;
+	data1->Collision->CollisionArray[1].center = data1->Position;
+	data1->Collision->CollisionArray[1].attr &= 0xFFFFFFEF;
+	return;
+}

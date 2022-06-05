@@ -192,7 +192,6 @@ void __cdecl EffectKnuxHadoken(ObjectMaster* obj)
 	char flag1 = 1;
 	char flag2 = 3;
 
-
 	if (data->Action)
 	{
 		if (data->Action == 1)
@@ -213,7 +212,7 @@ void __cdecl EffectKnuxHadoken(ObjectMaster* obj)
 			data->Position.z = v6;
 
 
-			colArray->param1 = (float)timer * (float)8.0;
+			colArray->param1 = (float)timer * (float)8.0f;
 			data->Collision->CollisionArray[0].attr &= 0xFFFFFFEF;
 			data->Collision->CollisionArray[0].damage |= 3u;
 			data->field_2 = 6;

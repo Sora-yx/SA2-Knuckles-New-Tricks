@@ -186,12 +186,19 @@ AnimationInfo KnuxAnimationList_R[] = {
 	{ 182, 171, 3, 182, 0.0625f, 0.5f },
 	{ 183, 171, 4, 184, 0.125f, 0.3f },
 	{ 184, 171, 3, 184, 1, 0.1f },
-	{ 185, 171, 4, 186, 0.03125f, 0.3f },
-	{ 186, 171, 3, 186, 1, 0.2f },
+	//{ 185, 171, 4, 186, 0.03125f, 0.3f },	
+	/**{186, 142, 3, 186, 1, 0.2f},
 	{ 187, 171, 3, 187, 0.0625f, 0.1f },
 	{ 188, 171, 6, 188, 0.25f, 0.2f },
 	{ 189, 171, 3, 92, 0.25f, 0.3f },
-	{ 190, 171, 4, 68, 0.25f, 0.3f },
+	{ 190, 171, 4, 68, 0.25f, 0.3f },*/
+		//missile MH + Vine
+	{ 185, 142, 4, 186,  0.25f, 0.3f },
+	{ 186, 142, 3, 186, 0.25f, 0.5f },
+	{ 187, 142, 3, 187, 0.25f, 0.8f },
+	{ 188, 142, 6, 188, 0.25f, 0.3f },
+	{ 189, 142, 4, 189, 0.25f, 0.2f },
+	{ 190, 142, 3, 190, 0.25f, 0.3f },
 	{ 191, 171, 9, 0, 0.25f, 0.2f },
 	{ 192, 171, 3, 97, 0.25f, 0.3f },
 	{ 193, 171, 4, 103, 0.25f, 0.5f },
@@ -481,43 +488,28 @@ AnimationInfo RougeAnimationList_R[] = {
 	{ 233, 171, 3, 233, 0.25f, 0.2f },
 };
 
+void Load_KnuxNewAnim() {
 
-void CheckAndForce_NewAnimList() {
+	if (!isCustomAnim)
+		return;
 
-	for (int i = 0; i < 2; i++) {
+	if (!isSA1Char(Characters_Knuckles))
+		AnimationIndex* KnuxNewAnimList = LoadMTNFile((char*)"\\anim\\newknuckmtn.prs");
 
 
-		if (MainCharObj1[i]) {
-
-			int id = MainCharObj2[i]->CharID;
-			int id2 = MainCharObj2[i]->CharID2;
-			
-			if (id == Characters_Knuckles) {
-			
-				if (id2 == Characters_Knuckles)
-					MainCharObj2[i]->AnimInfo.Animations = KnuxAnimationList_R;
-			}
-
-			if (id == Characters_Rouge) {
-				
-				if (id2 == Characters_Rouge)
-					MainCharObj2[i]->AnimInfo.Animations = RougeAnimationList_R;
-			}
-		}
-	}
+	if (!isSA1Char(Characters_Rouge))
+		AnimationIndex* RougeNewAnimList = LoadMTNFile((char*)"\\anim\\newrougemtn.prs");
 }
+
 
 void Init_NewAnimation() {
 
 	if (!isCustomAnim)
 		return;
 
-	WriteData((AnimationInfo**)0x72821F, KnuxAnimationList_R);
-	WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);
+	if (!isSA1Char(Characters_Knuckles))
+		WriteData((AnimationInfo**)0x72821F, KnuxAnimationList_R);
 
-
-	if (isCustomAnim) {
-		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\knuckmtn.prs", "Resource\\gd_PC\\anim\\knuckmtn.prs");
-		HelperFunctionsGlobal.ReplaceFile("Resource\\gd_PC\\rougemtn.prs", "Resource\\gd_PC\\anim\\rougemtn.prs");
-	}
+	if (!isSA1Char(Characters_Rouge))
+		WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);
 }

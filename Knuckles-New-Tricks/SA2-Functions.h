@@ -214,3 +214,22 @@ static inline signed int KnuxResetActionAnim(CharObj2Base* a1, EntityData1* a2, 
 
 	return result;
 }
+
+static const void* const KnuxNactPtr = (void*)0x732E00;
+static inline int Knux_CheckNAct(KnucklesCharObj2* a1, EntityData2* a2, EntityData1* a3, CharObj2Base* a4) {
+
+	int result;
+
+	__asm
+	{
+		push[a4] // a4
+		mov ebx, a3 // a3
+		mov ecx, a2 // a2
+		mov edx, a1 // a1
+		call KnuxNactPtr
+		add esp, 4
+		mov result, eax
+	}
+
+	return result;
+}

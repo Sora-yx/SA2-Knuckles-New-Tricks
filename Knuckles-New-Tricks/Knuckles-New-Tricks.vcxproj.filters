@@ -33,7 +33,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="helper.cpp">
+    <ClCompile Include="objects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="startposition.cpp">
@@ -68,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="sunglasses.cpp">
       <Filter>Source Files\abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="patches.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

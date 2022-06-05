@@ -28,13 +28,13 @@ void RollPhysicControlMain(EntityData1* a1, EntityData2* a2, CharObj2Base* a3) {
 
 signed int RollCheckInput(EntityData1* a1, CharObj2Base* a2)
 {
-	if (CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea != 7 || a1->NextAction != 0 || !isRoll || a2->Speed.x < 1.3)
+	if (CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea != 7 || a1->NextAction != 0 || !isRoll || a2->Speed.x < 1.3f)
 		return 0;
 
 
 	if (Controllers[a2->PlayerNum].press & (RollButton))
 	{
-		a2->Speed.x += 0.5;
+		a2->Speed.x += 0.5f;
 		a1->Action = Action_SA1Rolling;
 		a2->AnimInfo.Next = 12;
 		a1->Status |= Status_Ball;
@@ -66,22 +66,22 @@ void ResetPlayerSpeed(CharObj2Base* result, EntityData2* a2)
 {
 	if (result)
 	{
-		result->Speed.z = 0.0;
-		result->Speed.y = 0.0;
-		result->Speed.x = 0.0;
+		result->Speed.z = 0.0f;
+		result->Speed.y = 0.0f;
+		result->Speed.x = 0.0f;
 	}
 	if (a2)
 	{
-		a2->Velocity.z = 0.0;
-		a2->Velocity.y = 0.0;
-		a2->Velocity.x = 0.0;
+		a2->Velocity.z = 0.0f;
+		a2->Velocity.y = 0.0f;
+		a2->Velocity.x = 0.0f;
 	}
 }
 
-double sub_77FBA0(NJS_VECTOR* a1, NJS_VECTOR* a2)
+float sub_77FBA0(NJS_VECTOR* a1, NJS_VECTOR* a2)
 {
-	double v2; // st7
-	double v3; // st7
+	float v2; // st7
+	float v3; // st7
 	float v5; // [esp+0h] [ebp-4h]
 	float v6; // [esp+0h] [ebp-4h]
 	float v7; // [esp+0h] [ebp-4h]
@@ -115,7 +115,7 @@ int CheckGravityFallThing(EntityData1* a1, EntityData2* a3, CharObj2Base* a4)
 		|| (a4->PreviousSurfaceFlags & SurfaceFlag_Dynamic) != 0
 		|| (curaction = a1->Action, a1->Action != 1)
 		|| a4->field_12
-		|| sub_77FBA0(&Gravity, &a4->FloorNormal) >= -0.9847999811172485
+		|| sub_77FBA0(&Gravity, &a4->FloorNormal) >= -0.9847999811172485f
 		|| a4->PhysData.JogSpeed > (double)a4->Speed.x
 		|| njScalor(&a4->WallNormal) != 0.0)
 	{
@@ -158,7 +158,7 @@ void UnrollCheck(EntityData1* data1, EntityData2* data2, CharObj2Base* co2) {
 			if (KnuxJump(data1, co2))
 			{
 				RestorePhysic(co2);
-				data1->Status &= Status_Ball;
+				data1->Status &= ~Status_Ball;
 				return;
 			}
 

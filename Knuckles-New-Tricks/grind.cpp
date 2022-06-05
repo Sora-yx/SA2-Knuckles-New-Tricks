@@ -91,7 +91,7 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 }
 
 void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, KnucklesCharObj2* co2Knux) {
-	if (Knux_CheckNextActions_r(data2, co2Knux, data1, co2)) {
+	if (Knux_CheckNAct(co2Knux, data2, data1, co2)) {
 		return;
 	}
 

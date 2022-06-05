@@ -30,18 +30,21 @@ extern AnimationInfo KnuxAnimationList_R[];
 extern AnimationInfo RougeAnimationList_R[];
 
 void KnuxTricks_Init();
-void Init_Helper();
+void Init_Objects();
 void Init_StartEndPos();
 void Init_NewAnimation();
-signed int __cdecl Knux_CheckNextActions_r(EntityData2* a1, KnucklesCharObj2* a2, EntityData1* a3, CharObj2Base* a4);
+
 void Load_KnuxPunch();
 void DoCollisionAttackStuff(EntityData1* data1);
 void Init_ActionRemap();
 void ReadConfig(const char* path);
-void CheckAndForce_NewAnimList();
 void RestorePhysic(CharObj2Base* co2);
 signed int Fast_SunglassesCheckInput(CharObj2Base* co2, EntityData1* data1);
 
 void init_SunglassesChange();
 
 #define cur_matrix _nj_current_matrix_ptr_
+
+extern HMODULE SA1Char;
+void init_Patches();
+void Load_KnuxNewAnim();
