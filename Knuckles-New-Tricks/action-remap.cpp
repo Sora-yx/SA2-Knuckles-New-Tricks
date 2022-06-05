@@ -79,7 +79,6 @@ static signed int Knuckles_CheckActionWindow_r(CharObj2Base* co2, EntityData2* d
 					return 0;
 				}
 
-
 				if (isRoll && co2->Speed.x > 1.3 && SA2PunchButton == RollButton)
 					return 0;
 
@@ -136,7 +135,7 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 	int soundID; // esi
 	int vibeID; // eax
 	signed int result; // eax
-	char Sound3DID; // al
+	int Sound3DID; // al
 	int Sound3DID3;
 	char AltCostume; // al
 	NJS_VECTOR* PlayerPos; // esi
@@ -207,7 +206,7 @@ signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, 
 		}
 		knuxCo2->field_1BC[413] = Action_Run;
 		*(WORD*)&knuxCo2->field_1BC[484] = Action_None;
-		co2->Speed.y = 2.4000001;
+		co2->Speed.y = 2.4000001f;
 		if (co2->CharID2 == Characters_Chaos)
 		{
 			PlaySoundProbably(8218, 0, 0, 0);

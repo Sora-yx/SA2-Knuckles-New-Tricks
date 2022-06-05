@@ -1,19 +1,19 @@
 #include "pch.h"
 
 void RestorePhysic(CharObj2Base* co2) {
-	co2->PhysData.Height = PhysicsArray[0].Height;
-	co2->PhysData.Radius = PhysicsArray[0].Radius;
-	co2->PhysData.FloorGrip = PhysicsArray[0].FloorGrip;
-	co2->PhysData.CenterHeight = PhysicsArray[0].CenterHeight;
+	co2->PhysData.Height = PhysicsArray[Characters_Knuckles].Height;
+	co2->PhysData.Radius = PhysicsArray[Characters_Knuckles].Radius;
+	co2->PhysData.FloorGrip = PhysicsArray[Characters_Knuckles].FloorGrip;
+	co2->PhysData.CenterHeight = PhysicsArray[Characters_Knuckles].CenterHeight;
 	return;
 }
 
 //Apply Somersault physic/collision 
 void SetPhysicRoll(CharObj2Base* co2, EntityData1* v1) {
-	co2->PhysData.Height = PhysicsArray[0].Height * 0.4000000059604645;
-	co2->PhysData.Radius = PhysicsArray[0].Radius * 0.4000000059604645;
-	co2->PhysData.FloorGrip = PhysicsArray[0].FloorGrip * 0.4000000059604645;
-	co2->PhysData.CenterHeight = PhysicsArray[0].CenterHeight * 0.4000000059604645;
+	co2->PhysData.Height = PhysicsArray[Characters_Knuckles].Height * 0.4000000059604645f;
+	co2->PhysData.Radius = PhysicsArray[Characters_Knuckles].Radius * 0.4000000059604645f;
+	co2->PhysData.FloorGrip = PhysicsArray[Characters_Knuckles].FloorGrip * 0.4000000059604645f;
+	co2->PhysData.CenterHeight = PhysicsArray[Characters_Knuckles].CenterHeight * 0.4000000059604645f;
 	v1->Collision->CollisionArray->push &= ~0x4000u;
 	return;
 }
@@ -21,8 +21,8 @@ void SetPhysicRoll(CharObj2Base* co2, EntityData1* v1) {
 void RollPhysicControlMain(EntityData1* a1, EntityData2* a2, CharObj2Base* a3) {
 	PlayerGetRotation(a1, a2, a3);
 	SlowDownThing(a1, a2, a3);
-	PlayerGetSpeed(a1, a3, a2);
-	PlayerSetPosition(a1, a2, a3);
+	PGetSpeed(a1, a3, a2);
+	PSetPosition(a1, a2, a3);
 	PResetPosition(a1, a2, a3);
 }
 
@@ -175,7 +175,7 @@ void UnrollCheck(EntityData1* data1, EntityData2* data2, CharObj2Base* co2) {
 
 void UnrollCheckInput(EntityData1* data1, CharObj2Base* co2) {
 
-	if ((Controllers[co2->PlayerNum].press & RollButton) != 0 && co2->AnimInfo.field_10 > 2.0 || co2->Speed.x < 2.0)
+	if ((Controllers[co2->PlayerNum].press & RollButton) != 0 && co2->AnimInfo.nframe > 2.0 || co2->Speed.x < 2.0)
 	{
 		RestorePhysic(co2);
 		data1->Action = 1;

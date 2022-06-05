@@ -43,3 +43,5 @@ void RestorePhysic(CharObj2Base* co2);
 signed int Fast_SunglassesCheckInput(CharObj2Base* co2, EntityData1* data1);
 
 void init_SunglassesChange();
+
+#define cur_matrix _nj_current_matrix_ptr_

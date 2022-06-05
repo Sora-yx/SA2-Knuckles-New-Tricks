@@ -104,7 +104,7 @@ void CheckBreakDynamiteHiddenBase(ObjectMaster* obj) {
 
 	if (obj) {
 		if (data->NextAction != 7 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
-			data->field_6 = 0;
+			data->Timer = 0;
 			data->NextAction = 7;
 		}
 	}

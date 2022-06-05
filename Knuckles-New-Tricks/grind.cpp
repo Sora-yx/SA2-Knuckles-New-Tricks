@@ -10,9 +10,9 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 	signed int v37 = 0;
 	int a2a = 0;
 	int v20 = 0;
-	double v22 = 0.0;
-	double v23 = 0.0;
-	double v24 = 0.0;
+	float v22 = 0.0f;
+	float v23 = 0.0f;
+	float v24 = 0.0f;
 	int v25 = 0;
 	float v39 = 0.0;
 	float v40 = 0.0;
@@ -41,7 +41,7 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 	{
 		njRotateY((float*)v21, -a4->Rotation.y);
 	}
-	njCalcPoint(&result, &result, v21);
+	njCalcVector(&result, &result, v21);
 	v39 = fabs(a3->Speed.y);
 	if (a3->Speed.x < 0.0)
 	{
@@ -55,7 +55,7 @@ int setGrindingNextAction(KnucklesCharObj2* a2, CharObj2Base* a3, EntityData1* a
 		v40 = fabs(result.y);
 		v23 = v22 * v40 + a3->Speed.x;
 	}
-	a3->Speed.x = v23 + 1.0;
+	a3->Speed.x = v23 + 1.0f;
 	a4->Action = Grinding;
 
 	if (isCustomAnim && (a3->CharID2 == Characters_Knuckles || a3->CharID2 == Characters_Rouge)) {
@@ -103,11 +103,6 @@ void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, 
 		return;
 	}
 
-	/*if (CheckTrickASM(co2Miles, co2, data1))
-	{
-		return;
-	}*/
-
 	if (data1->Status & Status_DisableControl || !Jump_Pressed[co2->PlayerNum] || !sub_45B2C0(co2, co2->PlayerNum, data1) || sub_45B2C0(co2, co2->PlayerNum, data1) > 3) {
 
 		if (KnuxJump(data1, co2)) {
@@ -152,10 +147,10 @@ void CheckGrindThing(EntityData1* data1, EntityData2* data2, CharObj2Base* co2, 
 	analog_mag *= njSin((analog_angle - LOWORD(data1->Rotation.y)));
 
 	if (analog_mag < 0) {
-		data1->Rotation.y = data1->Rotation.y - (12288.0 - njScalor(&co2->Speed) * 800.0);
+		data1->Rotation.y = data1->Rotation.y - (12288.0f - njScalor(&co2->Speed) * 800.0f);
 	}
 	else {
-		data1->Rotation.y = 12288.0 - njScalor(&co2->Speed) * 800.0 + data1->Rotation.y;
+		data1->Rotation.y = 12288.0f - njScalor(&co2->Speed) * 800.0f + data1->Rotation.y;
 	}
 }
 
@@ -193,19 +188,19 @@ void LoadRailParticules(KnucklesCharObj2* co2, EntityData2* data2) {
 void RailAnim_ToNormal(CharObj2Base* co2) {
 	switch (co2->AnimInfo.Current) {
 	case Anm_RailCrouchL:
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		co2->AnimInfo.Next = Anm_RailL;
 		break;
 	case Anm_RailCrouchR:
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		co2->AnimInfo.Next = Anm_RailR;
 		break;
 	case Anm_RailFastCL:
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		co2->AnimInfo.Next = Anm_RailFastL;
 		break;
 	case Anm_RailFastCR:
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		co2->AnimInfo.Next = Anm_RailFastR;
 		break;
 	}
@@ -215,19 +210,19 @@ void RailAnim_ToCrouch(CharObj2Base* co2) {
 	switch (co2->AnimInfo.Current) {
 	case Anm_RailL:
 		co2->AnimInfo.Next = Anm_RailCrouchL;
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		break;
 	case Anm_RailR:
 		co2->AnimInfo.Next = Anm_RailCrouchR;
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		break;
 	case Anm_RailFastL:
 		co2->AnimInfo.Next = Anm_RailFastCL;
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		break;
 	case Anm_RailFastR:
 		co2->AnimInfo.Next = Anm_RailFastCR;
-		co2->AnimInfo.field_18 = co2->AnimInfo.field_10;
+		co2->AnimInfo.field_18 = co2->AnimInfo.nframe;
 		break;
 	}
 }

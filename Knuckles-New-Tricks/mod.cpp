@@ -2,15 +2,19 @@
 
 
 HelperFunctions HelperFunctionsGlobal;
+const char* error = "[Knux New Tricks]: WARNING: Your version of the Mod Loader is old, the mod won't work properly.\nPlease update your Mod Loader for the best experience.";
 
 extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
+		Sleep(10);
 
 		HelperFunctionsGlobal = helperFunctions;
 
-		if (HelperFunctionsGlobal.Version < 8)
-			MessageBoxA(MainWindowHandle, "WARNING: Your version of the Mod Loader is old, some functionality of Knuckles New Tricks will not be available.\N Please update your Mod Loader for best experience.", "Knux New Tricks Mod", MB_ICONWARNING);
+		if (HelperFunctionsGlobal.Version < 8) {
+			PrintDebug(error);
+			MessageBoxA(MainWindowHandle, error, "Knuckles New Tricks Mod", MB_ICONWARNING);
+		}
 
 		ReadConfig(path); //get mod settings by the user
 		KnuxTricks_Init();

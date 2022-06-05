@@ -122,13 +122,10 @@ static void __declspec(naked) Knux_CheckNextActionsASM()
 
 void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesCharObj2* a3, KnucklesCharObj2* a4) {
 
-	a3->base.AnimInfo.Next = a3->base.AnimInfo.Next;
-
 	FunctionPointer(void, original, (EntityData1 * data1, EntityData2 * data2, KnucklesCharObj2 * a3, KnucklesCharObj2 * a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
 	int currentAnim = a4->base.AnimInfo.Current;
-
 
 	switch (data1->Action) {
 
@@ -229,31 +226,30 @@ void Knux_Main_r(ObjectMaster* obj)
 		KnuxComboAction(data2, co2, data1);
 		PlayerGetRotation(data1, data2, co2);
 		PGetFriction(data1, data2, co2);
-		PlayerGetSpeed(data1, co2, data2);
+		PGetSpeed(data1, co2, data2);
 
 		if (co2->AnimInfo.Current == punch01Anim && co2->Speed.x > 0.2)
 		{
-			co2->Speed.x = (0.2 - co2->Speed.x) * 0.5 + co2->Speed.x;
+			co2->Speed.x = (0.2f - co2->Speed.x) * 0.5f + co2->Speed.x;
 		}
 
-		if (PlayerSetPosition(data1, data2, co2))
+		if (PSetPosition(data1, data2, co2))
 		{
-			Vector3 a3;
+			NJS_VECTOR a3;
 			GetBufferedPositionAndRot(co2->PlayerNum, 0, &a3, 1);
 			data1->Position = a3;
-			co2->Speed.z = 0.0;
-			co2->Speed.y = 0.0;
-			co2->Speed.x = 0.0;
-			data2->Velocity.z = 0.0;
-			data2->Velocity.y = 0.0;
-			data2->Velocity.x = 0.0;
+			co2->Speed.z = 0.0f;
+			co2->Speed.y = 0.0f;
+			co2->Speed.x = 0.0f;
+			data2->Velocity.z = 0.0f;
+			data2->Velocity.y = 0.0f;
+			data2->Velocity.x = 0.0f;
 		}
 
 		PResetPosition(data1, data2, co2);
 		break;
 	}
 }
-
 
 
 void KnuxTricks_Init() {
