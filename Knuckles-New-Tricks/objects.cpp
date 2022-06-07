@@ -10,8 +10,21 @@ static Trampoline* DoorIG_t = nullptr;
 static Trampoline* DoorIG2_t = nullptr;
 static Trampoline* RocketIG_t = nullptr;
 
+static Trampoline* PowerSupply_event_t = nullptr;
 
 static Trampoline* Init_LandColMemory_t = nullptr;
+
+void __cdecl PowerSupply_EventTask(ObjectMaster* a1)
+{
+	if (CurrentCharacter != Characters_MechEggman && CurrentCharacter != Characters_MechTails)
+	{
+		DeleteObject_(a1);
+		return;
+	}
+
+	ObjectFunc(origin, PowerSupply_event_t->Target());
+	origin(a1);
+}
 
 Bool __cdecl CheckBreakObject_r(ObjectMaster* obj, ObjectMaster* other)
 {
@@ -261,8 +274,7 @@ void Init_Objects() {
 
 
 	if (!isSA2Miles()) {
-		WriteData<5>((void*)0x7899e8, 0x90); //remove powersupply
-
+		PowerSupply_event_t = new Trampoline((int)0x78A450, (int)0x78A455, PowerSupply_EventTask);
 		WriteJump(reinterpret_cast<void*>(0x776D1E), CheckGravitySwitch);
 	}
 

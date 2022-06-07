@@ -97,7 +97,7 @@ bool isSA1Char(uint8_t charID) {
 
 bool isHuntingCharacter() {
 
-	if (!KnuxCharObj2Ptr || MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Knuckles || MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Rouge)
+	if (KnuxCharObj2Ptr && ( (MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Knuckles) || (MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Rouge)))
 		return true;
 
 	return false;

@@ -219,12 +219,19 @@ AnimationInfo KnuxAnimationList_R[] = {
 	{ 208, 190, 3, 208, 0.25f, 0.5f },
 	{ 209, 190, 3, 209, 0.25f, 0.5f },
 	{ 210, 190, 3, 210, 0.25f, 0.5f },
-	{ 211, 171, 3, 211, 0.0625f, 0.1f },
+	/**{211, 171, 3, 211, 0.0625f, 0.1f},
 	{ 212, 171, 3, 212, 0.0625f, 0.4f },
 	{ 213, 142, 3, 213, 0.125f, 0.5f },
 	{ 214, 142, 3, 214, 0.125f, 0.5f },
 	{ 215, 171, 4, 211, 0.25f, 0.5f },
-	{ 216, 171, 3, 216, 0.25f, 0.2f },
+	{ 216, 171, 3, 216, 0.25f, 0.2f },*/
+	//Rouge Anim placeholder? Fixed to use knux model (Dry Lagoon turtle)
+	{ 211, 142, 3, 211, 0.0625f, 0.1f},
+	{ 212, 142, 3, 212, 0.0625f, 0.4f },
+	{ 213, 142, 3, 213, 0.125f, 0.5f },
+	{ 214, 142, 3, 214, 0.125f, 0.5f },
+	{ 215, 142, 4, 211, 0.25f, 0.5f },
+	{ 216, 142, 3, 216, 0.25f, 0.2f },
 	//grinding + tricks
 	{ 217, 142, 13, 217, 0.25f, 0.3f },
 	{ 218, 142, 13, 218, 0.25f, 0.3f },
@@ -489,6 +496,9 @@ AnimationInfo RougeAnimationList_R[] = {
 };
 
 void Load_KnuxNewAnim() {
+
+	if (CurrentLevel == LevelIDs_DryLagoon)
+		LoadDryLagoonCharAnims();
 
 	if (!isCustomAnim)
 		return;
