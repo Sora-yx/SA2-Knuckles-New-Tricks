@@ -158,7 +158,6 @@
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="Knuckles.cpp" />
     <ClCompile Include="mod.cpp" />
-    <ClCompile Include="particles.cpp" />
     <ClCompile Include="patches.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

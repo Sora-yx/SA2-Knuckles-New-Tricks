@@ -48,9 +48,6 @@
     <ClCompile Include="punch.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>
-    <ClCompile Include="particles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="roll.cpp">
       <Filter>Source Files\abilities</Filter>
     </ClCompile>

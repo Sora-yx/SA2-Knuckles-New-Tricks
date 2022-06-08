@@ -196,7 +196,7 @@ __declspec(naked) void  CheckBreakCGGlasses() {
 static const void* const loc_776D23 = (void*)0x776D23;
 static const void* const loc_776D5F = (void*)0x776D5F;
 __declspec(naked) void  CheckGravitySwitch() {
-	if (MainCharObj1[0]->Action == 0x53 || (Controllers[0].press & (Buttons_X | Buttons_B)))
+	if (MainCharObj1[0]->Action == 0x53 || CurrentCharacter > Characters_Shadow && (Controllers[0].press & (Buttons_X | Buttons_B)))
 	{
 		_asm jmp loc_776D23
 	}
@@ -276,11 +276,7 @@ void Init_Objects() {
 	if (!isSA2Miles()) {
 		PowerSupply_event_t = new Trampoline((int)0x78A450, (int)0x78A455, PowerSupply_EventTask);
 		WriteJump(reinterpret_cast<void*>(0x776D1E), CheckGravitySwitch);
+		WriteJump(reinterpret_cast<void*>(0x776330), CheckBreakCGGlasses);
+		WriteJump(reinterpret_cast<void*>(0x6A82FA), CheckBreakBirdBox);
 	}
-
-	WriteJump(reinterpret_cast<void*>(0x776330), CheckBreakCGGlasses);
-	WriteJump(reinterpret_cast<void*>(0x6A82FA), CheckBreakBirdBox);
-
-
-
 }

@@ -2,7 +2,7 @@
 
 //Original Code by SonicFreak94, edited here to let the player change controls of the actions.
 
-//We trampoline "ActionWindow" to take the control of it, since it's an usercall this, as always, need 3 functions to work.
+//We trampoline "ActionWindow" to take the control of it, since it's an usercall, this as always need 3 functions to work.
 
 Trampoline* Knux_CheckActionWindow_t;
 Trampoline* Knux_PunchManagement_t;
