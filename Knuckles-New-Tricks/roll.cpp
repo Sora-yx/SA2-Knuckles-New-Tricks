@@ -31,7 +31,6 @@ signed int RollCheckInput(EntityData1* a1, CharObj2Base* a2)
 	if (CurrentLevel == LevelIDs_ChaoWorld && CurrentChaoArea != 7 || a1->NextAction != 0 || !isRoll || a2->Speed.x < 1.3f)
 		return 0;
 
-
 	if (Controllers[a2->PlayerNum].press & (RollButton))
 	{
 		a2->Speed.x += 0.5f;

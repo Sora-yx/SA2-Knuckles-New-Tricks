@@ -4,8 +4,8 @@
 
 //We trampoline "ActionWindow" to take the control of it, since it's an usercall, this as always need 3 functions to work.
 
-Trampoline* Knux_CheckActionWindow_t;
-Trampoline* Knux_PunchManagement_t;
+Trampoline* Knux_CheckActionWindow_t = nullptr;
+Trampoline* Knux_PunchManagement_t = nullptr;
 
 signed int Knuckles_CheckActionWindow_Origin(CharObj2Base* co2, EntityData2* data2, EntityData1* data1, KnucklesCharObj2* knuxCO2)
 {
@@ -129,7 +129,7 @@ void Knux_InputCheckPunchRefresh(int pID, char action, KnucklesCharObj2* knuxCo2
 
 signed int Knux_PunchManagement_r(EntityData1* data, KnucklesCharObj2* knuxCo2, CharObj2Base* co2)
 {
-	
+
 	__int16 FieldCopy; // dx
 	int pID; // eax
 	int soundID; // esi
