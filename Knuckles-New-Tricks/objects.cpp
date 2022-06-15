@@ -260,7 +260,7 @@ void InitLandColMemory_r()
 
 	if (!isHunter)
 	{
-		KnuxCharObj2Ptr = nullptr;
+		KnuxCharObj2Ptr = nullptr; //reset the pointer because the vanilla game never do lol
 	}
 
 	VoidFunc(origin, Init_LandColMemory_t->Target());

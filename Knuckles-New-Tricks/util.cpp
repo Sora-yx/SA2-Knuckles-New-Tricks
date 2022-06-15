@@ -145,7 +145,8 @@ bool isAttackingBoxes() {
 }
 
 void FreeMDL(ModelInfo* pointer) {
-	if (pointer) delete(pointer);
+	if (pointer) 
+		delete(pointer);
 }
 
 void DoCollisionAttackStuff(EntityData1* data1) {
