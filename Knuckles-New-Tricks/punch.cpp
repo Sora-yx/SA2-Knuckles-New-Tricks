@@ -458,6 +458,18 @@ signed int Knux_CheckPunchInput(CharObj2Base* co2, EntityData1* data)
 
 
 void Load_KnuxPunch() {
-	PunchMDL = LoadMDL("Punch", ModelFormat_Chunk);
+
+	if (!PunchMDL)
+		PunchMDL = LoadMDL("Punch", ModelFormat_Chunk);
+
 	LoadTextureList("KNU_EFF_HD", &Knux_EffTexList);
+}
+
+void FreeModelsTex()
+{
+	KnuxCharObj2Ptr = nullptr;
+	if (PunchMDL)
+		FreeMDL(PunchMDL);
+
+	FreeTexList(&Knux_EffTexList);
 }

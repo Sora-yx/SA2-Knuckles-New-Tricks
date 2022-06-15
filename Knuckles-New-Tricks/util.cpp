@@ -97,8 +97,15 @@ bool isSA1Char(uint8_t charID) {
 
 bool isHuntingCharacter() {
 
-	if (KnuxCharObj2Ptr && ( (MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Knuckles) || (MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Rouge)))
-		return true;
+	if (KnuxCharObj2Ptr) {
+
+		CharObj2Base* co2 = &KnuxCharObj2Ptr->base;
+
+		if (co2) {
+			if (((MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Knuckles) || (MainCharObj2[KnuxCharObj2Ptr->base.PlayerNum]->CharID == Characters_Rouge)))
+				return true;
+		}
+	}
 
 	return false;
 }
@@ -135,6 +142,10 @@ bool isAttackingBoxes() {
 	}
 
 	return false;
+}
+
+void FreeMDL(ModelInfo* pointer) {
+	if (pointer) delete(pointer);
 }
 
 void DoCollisionAttackStuff(EntityData1* data1) {

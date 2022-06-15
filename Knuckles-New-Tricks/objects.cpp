@@ -239,7 +239,12 @@ void CheckAndSetHackObject(CharObj2Base* co2) {
 //used to load object hack and new anim for knux / rouge
 void InitLandColMemory_r()
 {
+	bool isHunter = false;
+
 	for (int i = 0; i < 4; i++) {
+
+		if (isHunter)
+			break;
 
 		if (MainCharObj2[i]) {
 
@@ -248,8 +253,14 @@ void InitLandColMemory_r()
 				Load_KnuxPunch();
 				CheckAndSetHackObject(MainCharObj2[i]);
 				Load_KnuxNewAnim();
+				isHunter = true;
 			}
 		}
+	}
+
+	if (!isHunter)
+	{
+		KnuxCharObj2Ptr = nullptr;
 	}
 
 	VoidFunc(origin, Init_LandColMemory_t->Target());

@@ -10,3 +10,6 @@ bool isHuntingCharacter();
 bool isKnuxAttacking();
 bool isAttackingBoxes();
 void DoCollisionAttackStuff(EntityData1* data1);
+
+void FreeModelsTex();
+void FreeMDL(ModelInfo* pointer);

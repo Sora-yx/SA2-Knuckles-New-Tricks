@@ -35,7 +35,7 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl OnInitEnd()
 	{
-
+		FreeModelsTex();
 	}
 
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer };
