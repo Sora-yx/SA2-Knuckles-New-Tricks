@@ -507,9 +507,22 @@ void Load_KnuxNewAnim() {
 	if (!isSA1Char(Characters_Knuckles))
 		AnimationIndex* KnuxNewAnimList = LoadMTNFile((char*)"\\anim\\newknuckmtn.prs");
 
-
 	if (!isSA1Char(Characters_Rouge))
 		AnimationIndex* RougeNewAnimList = LoadMTNFile((char*)"\\anim\\newrougemtn.prs");
+}
+
+void Fix_TikalAnim(char pnum)
+{
+	if (!MainCharObj2[pnum] || MainCharObj2[pnum]->CharID2 != Characters_Tikal)
+		return;
+
+	for (int i = 0; i < TikalAnimList_Length; i++)
+	{
+		if (MainCharObj2[pnum]->AnimInfo.Animations[i].ModelNum == 171)
+		{
+			MainCharObj2[pnum]->AnimInfo.Animations[i].ModelNum = 483; //fix the wrong model ID on the animations of Tikal (placeholder crap that uses Rouge model)
+		}
+	}
 }
 
 
@@ -522,5 +535,6 @@ void Init_NewAnimation() {
 		WriteData((AnimationInfo**)0x72821F, KnuxAnimationList_R);
 
 	if (!isSA1Char(Characters_Rouge))
-		WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);
+		WriteData((AnimationInfo**)0x72856F, RougeAnimationList_R);		
+
 }

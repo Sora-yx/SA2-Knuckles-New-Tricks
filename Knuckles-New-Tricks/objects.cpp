@@ -253,6 +253,7 @@ void InitLandColMemory_r()
 				Load_KnuxPunch();
 				CheckAndSetHackObject(MainCharObj2[i]);
 				Load_KnuxNewAnim();
+				Fix_TikalAnim(i);
 				isHunter = true;
 				break;
 			}

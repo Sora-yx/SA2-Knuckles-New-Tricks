@@ -48,4 +48,5 @@ void init_SunglassesChange();
 extern HMODULE SA1Char;
 void init_Patches();
 void Load_KnuxNewAnim();
+void Fix_TikalAnim(char pnum);
 extern uint8_t alwaysHunter;
