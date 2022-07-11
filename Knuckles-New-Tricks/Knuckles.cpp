@@ -122,18 +122,20 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 	FunctionPointer(void, original, (EntityData1 * data1, EntityData2 * data2, KnucklesCharObj2 * a3, KnucklesCharObj2 * a4), Knux_RunsAction_t->Target());
 	original(data1, data2, a3, a4);
 
-	int currentAnim = a4->base.AnimInfo.Current;
-	CharObj2Base* co2 = &a4->base;
+	int currentAnim = a3->base.AnimInfo.Current;
+	CharObj2Base* co2 = &a3->base;
 
-	if (Knux_CheckNAct(a3, data2, data1, &a4->base))
-	{
-		return;
-	}
+
 
 	switch (data1->Action) {
 
 	case Action_None:
 	case Action_Run:
+
+		if (Knux_CheckNAct(a4, data2, data1, &a4->base))
+		{
+			return;
+		}
 
 		if (Fast_SunglassesCheckInput(&a4->base, data1))
 			return;
@@ -180,18 +182,37 @@ void __cdecl Knux_RunsAction_r(EntityData1* data1, EntityData2* data2, KnucklesC
 		return;
 	case Grinding:
 
+		if (Knux_CheckNAct(a4, data2, data1, &a4->base))
+		{
+			return;
+		}
 		CheckGrindThing(data1, data2, &a4->base, a3);
 		break;
 	case HandGrinding: //Or whatever you call that thing in CG
+
+		if (Knux_CheckNAct(a4, data2, data1, &a4->base))
+		{
+			return;
+		}
 
 		DoHandGrinding(data1, &a4->base);
 		return;
 	case Action_SA1Rolling:
 
 
+		if (Knux_CheckNAct(a4, data2, data1, &a4->base))
+		{
+			return;
+		}
+
 		UnrollCheck(data1, data2, &a4->base);
 		break;
 	case Action_SA1Punch:
+
+		if (Knux_CheckNAct(a4, data2, data1, &a4->base))
+		{
+			return;
+		}
 
 		if ((a4->base.AnimInfo.Current) == 0 || a4->base.AnimInfo.Current == 8) {
 
@@ -336,9 +357,12 @@ void LoadRouge_r(int playNum)
 }
 
 void KnuxTricks_Init() {
+
 	Knux_Main_t = new Trampoline((int)0x728D70, (int)0x728D76, Knux_Main_r);
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
 	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
+
+
 
 	if (alwaysHunter != 0) {
 		LoadKnuckles_t = new Trampoline((int)LoadKnuckles, (int)LoadKnuckles + 0x6, LoadKnuckles_r);
@@ -347,5 +371,7 @@ void KnuxTricks_Init() {
 	}
 
 	init_SunglassesChange();
+
+
 
 }
