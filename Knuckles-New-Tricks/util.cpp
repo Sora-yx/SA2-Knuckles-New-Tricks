@@ -128,12 +128,12 @@ bool isKnuxAttacking() {
 }
 
 
-bool isAttackingBoxes() {
+bool isAttackingBoxes(char pNum) {
 
 	if (!isHuntingCharacter())
 		return false;
 
-	EntityData1* data1 = MainCharObj1[KnuxCharObj2Ptr->base.PlayerNum];;
+	EntityData1* data1 = MainCharObj1[pNum];;
 
 	if (data1->Action >= Action_Punch && data1->Action <= Action_Punch3Run || data1->Action == Action_SA1Rolling
 		|| data1->Action == Action_SA1Punch) {

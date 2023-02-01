@@ -241,10 +241,10 @@ void Knux_Main_r(ObjectMaster* obj)
 	ObjectFunc(origin, Knux_Main_t->Target());
 	origin(obj);
 
-	CharObj2Base* co2 = obj->Data2.Character;
-	EntityData1* data1 = obj->Data1.Entity;
-	EntityData2* data2 = (EntityData2*)obj->EntityData2;
-	KnucklesCharObj2* co2Knux = (KnucklesCharObj2*)obj->Data2.Character;
+	auto co2 = obj->Data2.Character;
+	auto data1 = obj->Data1.Entity;
+	auto data2 = (EntityData2*)obj->EntityData2;
+	auto co2Knux = (KnucklesCharObj2*)obj->Data2.Character;
 
 	switch (data1->Action) {
 
@@ -362,8 +362,6 @@ void KnuxTricks_Init() {
 	Knux_CheckNextActions_t = new Trampoline(0x732E00, 0x732E05, Knux_CheckNextActionsASM);
 	Knux_RunsAction_t = new Trampoline((int)0x72A520, (int)0x72A525, Knux_RunsAction_r);
 
-
-
 	if (alwaysHunter != 0) {
 		LoadKnuckles_t = new Trampoline((int)LoadKnuckles, (int)LoadKnuckles + 0x6, LoadKnuckles_r);
 		LoadRouge_t = new Trampoline((int)LoadRouge, (int)LoadRouge + 0x6, LoadRouge_r);
@@ -371,7 +369,5 @@ void KnuxTricks_Init() {
 	}
 
 	init_SunglassesChange();
-
-
 
 }

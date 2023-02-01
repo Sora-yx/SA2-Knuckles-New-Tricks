@@ -516,7 +516,7 @@ void Fix_TikalAnim(char pnum)
 	if (!MainCharObj2[pnum] || MainCharObj2[pnum]->CharID2 != Characters_Tikal)
 		return;
 
-	for (int i = 0; i < TikalAnimList_Length; i++)
+	for (int i = 0; i < TikalAnimList.size(); i++)
 	{
 		if (MainCharObj2[pnum]->AnimInfo.Animations[i].ModelNum == 171)
 		{

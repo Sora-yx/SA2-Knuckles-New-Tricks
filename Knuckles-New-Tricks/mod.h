@@ -1,5 +1,7 @@
 #pragma once
 
+
+#define TaskHook static FunctionHook<void, ObjectMaster*>
 extern HelperFunctions HelperFunctionsGlobal;
 extern bool isCustomAnim;
 extern int isKnuxAdventure;

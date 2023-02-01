@@ -45,7 +45,7 @@ void GoalRing_Main_r(ObjectMaster* obj)
 {
 	EntityData1* data = obj->Data1.Entity;
 
-	for (uint8_t i = 0; i < StageSelectLevels_Length; i++)
+	for (uint8_t i = 0; i < StageSelectLevels.size(); i++)
 	{
 		if ((CurrentLevel == StageSelectLevels[i].Level) && (StageSelectLevels[i].Character == Characters_Knuckles || StageSelectLevels[i].Character == Characters_Rouge))
 		{
@@ -90,7 +90,7 @@ static inline int Knuckles_LevelBounds_origin(EntityData1* a1, KnucklesCharObj2*
 
 int Knuckles_LevelBounds_r(EntityData1* a1, KnucklesCharObj2* a2)
 {
-	for (uint8_t i = 0; i < StageSelectLevels_Length; i++)
+	for (uint8_t i = 0; i < StageSelectLevels.size(); i++)
 	{
 		if ((CurrentLevel == StageSelectLevels[i].Level))
 		{

@@ -1,14 +1,14 @@
 #include "pch.h"
 
-static Trampoline* CheckBreakObject_t = nullptr;
-static Trampoline* Dynamite_t = nullptr;
-static Trampoline* DynamiteHiddenBase_t = nullptr;
-static Trampoline* DynamiteSandOcean_t = nullptr;
-static Trampoline* PrisonLaneDoor_t = nullptr;
-static Trampoline* PrisonLaneDoor4_t = nullptr;
-static Trampoline* DoorIG_t = nullptr;
-static Trampoline* DoorIG2_t = nullptr;
-static Trampoline* RocketIG_t = nullptr;
+FunctionHook<Bool, ObjectMaster*, ObjectMaster*> CheckBreakObject_t((intptr_t)CheckBreakObject);
+TaskHook Dynamite_t(Dynamite_Main);
+TaskHook DynamiteHiddenBase_t(DynamiteHiddenBase_Main);
+TaskHook DynamiteSandOcean_t(DynamiteSandOcean_Main);
+TaskHook PrisonLaneDoor_t(PrisonLaneDoor);
+TaskHook PrisonLaneDoor4_t(PrisonLaneDoor4);
+TaskHook DoorIG_t(DoorIG);
+TaskHook DoorIG2_t(DoorIG2);
+TaskHook RocketIG_t(RocketIG);
 
 static Trampoline* PowerSupply_event_t = nullptr;
 
@@ -28,100 +28,100 @@ void __cdecl PowerSupply_EventTask(ObjectMaster* a1)
 
 Bool __cdecl CheckBreakObject_r(ObjectMaster* obj, ObjectMaster* other)
 {
+	if (obj) {
+		ObjectMaster* col = GetCollidingPlayer(obj);
 
-	if (isAttackingBoxes() && GetCollidingPlayer(obj))
-		return 1;
+		if (col)
+		{
+			char pnum = GetPlayerNumber(col);
 
-	FunctionPointer(Bool, original, (ObjectMaster * obj, ObjectMaster * other), CheckBreakObject_t->Target());
-	return original(obj, other);
+			if (isAttackingBoxes(pnum))
+				return 1;
+		}
+	}
+
+	return CheckBreakObject_t.Original(obj, other);
 }
 
 void CheckBreakDynamite(ObjectMaster* obj) {
-
 	EntityData1* data = obj->Data1.Entity;
 
 	if (obj) {
-		if (data->Action == 0 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
-			data->Status |= 4u;
-			obj->EntityData2->gap_44[0] = 0;
+		if (data) {
+			if (data->Action == 0 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
+				data->Status |= 4u;
+				obj->EntityData2->gap_44[0] = 0;
+			}
 		}
 	}
 
-	ObjectFunc(origin, Dynamite_t->Target());
-	origin(obj);
+	Dynamite_t.Original(obj);
 }
 
 void CheckBreakDynamiteHiddenBase(ObjectMaster* obj) {
-
 	EntityData1* data = obj->Data1.Entity;
 
 	if (obj) {
-		if (data->NextAction != 7 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
-			data->Timer = 0;
-			data->NextAction = 7;
+		if (data) {
+			if (data->NextAction != 7 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
+				data->Timer = 0;
+				data->NextAction = 7;
+			}
 		}
 	}
 
-	ObjectFunc(origin, DynamiteHiddenBase_t->Target());
-	origin(obj);
+	DynamiteHiddenBase_t.Original(obj);
 }
 
 void CheckBreakDynamiteSandOcean(ObjectMaster* obj) {
-
 	EntityData1* data = obj->Data1.Entity;
 
 	if (obj) {
-		if (data->Action == 0 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
-			data->Status |= 4u;
-			obj->EntityData2->gap_44[0] = 0;
+		if (data) {
+			if (data->Action == 0 && isKnuxAttacking() && GetCollidingPlayer(obj)) {
+				data->Status |= 4u;
+				obj->EntityData2->gap_44[0] = 0;
+			}
 		}
 	}
 
-	ObjectFunc(origin, DynamiteSandOcean_t->Target());
-	origin(obj);
+	DynamiteSandOcean_t.Original(obj);
 }
 
 void CheckAndOpenPrisonLaneDoor(ObjectMaster* obj) {
-
 	EntityData1* data = obj->Data1.Entity;
 	EntityData2* data2 = obj->Data2.Entity;
 
 	if (obj) {
-
 		if (!isHuntingCharacter())
 			return;
 
-		if (data->Action == 0 && data->Rotation.x == 3)
-		{
-			data->Rotation.x = 32;
-		}
-		else  if (data->Action < 1 && GetCollidingPlayer(obj)) {
-			data->Rotation.x = 3;
-			data->Action = 1;
+		if (data) {
+			if (data->Action == 0 && data->Rotation.x == 3)
+			{
+				data->Rotation.x = 32;
+			}
+			else  if (data->Action < 1 && GetCollidingPlayer(obj)) {
+				data->Rotation.x = 3;
+				data->Action = 1;
+			}
 		}
 	}
 }
 
-
 void CheckPrisonLaneDoor(ObjectMaster* obj) {
 
 	CheckAndOpenPrisonLaneDoor(obj);
-
-	ObjectFunc(origin, PrisonLaneDoor_t->Target());
-	origin(obj);
+	PrisonLaneDoor_t.Original(obj);
 }
-
 
 void CheckPrisonLaneDoor4(ObjectMaster* obj) {
 
 	CheckAndOpenPrisonLaneDoor(obj);
-
-	ObjectFunc(origin, PrisonLaneDoor4_t->Target());
-	origin(obj);
+	PrisonLaneDoor4_t.Original(obj);
 }
 
 void CheckAndOpenIronGateDoor(ObjectMaster* obj) {
-
 	if (!isHuntingCharacter())
 		return;
 
@@ -132,39 +132,30 @@ void CheckAndOpenIronGateDoor(ObjectMaster* obj) {
 	}
 }
 
-
 void doorIG_r(ObjectMaster* obj) {
-
 	CheckAndOpenIronGateDoor(obj);
 
-	ObjectFunc(origin, DoorIG_t->Target());
-	origin(obj);
+	DoorIG_t.Original(obj);
 }
 
 void doorIG2_r(ObjectMaster* obj) {
-
 	CheckAndOpenIronGateDoor(obj);
 
-	ObjectFunc(origin, DoorIG2_t->Target());
-	origin(obj);
+	DoorIG2_t.Original(obj);
 }
 
 void rocketIG_r(ObjectMaster* obj) {
-
 	EntityData1* data = obj->Data1.Entity;
 
 	if (isHuntingCharacter()) {
-
 		if (GetCollidingPlayer(obj) && data->Action == 5)
 		{
 			data->Action = 6;
 		}
 	}
 
-	ObjectFunc(origin, RocketIG_t->Target());
-	origin(obj);
+	RocketIG_t.Original(obj);
 }
-
 
 
 static const void* const loc_6A82CC = (void*)0x6A82CC;
@@ -272,16 +263,17 @@ void InitLandColMemory_r()
 
 void Init_Objects() {
 
-	CheckBreakObject_t = new Trampoline((int)CheckBreakObject, (int)CheckBreakObject + 0x7, CheckBreakObject_r);
-	Dynamite_t = new Trampoline((int)Dynamite_Main, (int)Dynamite_Main + 0x5, CheckBreakDynamite);
-	DynamiteHiddenBase_t = new Trampoline((int)DynamiteHiddenBase_Main, (int)DynamiteHiddenBase_Main + 0x5, CheckBreakDynamiteHiddenBase);
-	DynamiteSandOcean_t = new Trampoline((int)DynamiteSandOcean_Main, (int)DynamiteSandOcean_Main + 0x6, CheckBreakDynamiteSandOcean);
-	PrisonLaneDoor_t = new Trampoline((int)PrisonLaneDoor, (int)PrisonLaneDoor + 0x6, CheckPrisonLaneDoor);
-	PrisonLaneDoor4_t = new Trampoline((int)PrisonLaneDoor4, (int)PrisonLaneDoor4 + 0x6, CheckPrisonLaneDoor4);
+	CheckBreakObject_t.Hook(CheckBreakObject_r);
+	Dynamite_t.Hook(CheckBreakDynamite);
+	DynamiteHiddenBase_t.Hook(CheckBreakDynamiteHiddenBase);
+	DynamiteSandOcean_t.Hook(CheckBreakDynamiteSandOcean);
 
-	DoorIG_t = new Trampoline((int)DoorIG, (int)DoorIG + 0x6, doorIG_r);
-	DoorIG2_t = new Trampoline((int)DoorIG2, (int)DoorIG2 + 0x6, doorIG2_r);
-	RocketIG_t = new Trampoline((int)RocketIG, (int)RocketIG + 0x6, rocketIG_r);
+	PrisonLaneDoor_t.Hook(CheckPrisonLaneDoor);
+	PrisonLaneDoor4_t.Hook(CheckPrisonLaneDoor4);
+
+	DoorIG_t.Hook(doorIG_r);
+	DoorIG2_t.Hook(doorIG2_r);
+	RocketIG_t.Hook(rocketIG_r);
 
 	Init_LandColMemory_t = new Trampoline((int)0x47BB50, (int)0x47BB57, InitLandColMemory_r);
 

@@ -9,6 +9,7 @@
 #include "Trampoline.h"
 #include "IniFile.hpp"
 #include "ModelInfo.h"
+#include "FunctionHook.h"
 #include "UsercallFunctionHandler.h"
 
 #include "mod.h"
