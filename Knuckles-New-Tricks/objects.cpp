@@ -28,7 +28,8 @@ void __cdecl PowerSupply_EventTask(ObjectMaster* a1)
 
 Bool __cdecl CheckBreakObject_r(ObjectMaster* obj, ObjectMaster* other)
 {
-	if (obj) {
+	if (obj) 
+	{
 		ObjectMaster* col = GetCollidingPlayer(obj);
 
 		if (col)
@@ -36,7 +37,7 @@ Bool __cdecl CheckBreakObject_r(ObjectMaster* obj, ObjectMaster* other)
 			char pnum = GetPlayerNumber(col);
 
 			if (isAttackingBoxes(pnum))
-				return 1;
+				return TRUE;
 		}
 	}
 

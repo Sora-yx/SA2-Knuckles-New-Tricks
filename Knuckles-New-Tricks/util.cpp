@@ -10,7 +10,8 @@ bool isCharaSelect() {
 	return false;
 }
 
-bool isSA2Miles() {
+bool isSA2Miles() 
+{
 	HMODULE miles = GetModuleHandle(L"SA2-Better-Miles");
 
 	if (miles)
@@ -128,12 +129,14 @@ bool isKnuxAttacking() {
 }
 
 
-bool isAttackingBoxes(char pNum) {
+bool isAttackingBoxes(char pNum)
+{
 
-	if (!isHuntingCharacter())
+	EntityData1* data1 = MainCharObj1[pNum];
+
+	if (!data1 || !isHuntingCharacter())
 		return false;
 
-	EntityData1* data1 = MainCharObj1[pNum];;
 
 	if (data1->Action >= Action_Punch && data1->Action <= Action_Punch3Run || data1->Action == Action_SA1Rolling
 		|| data1->Action == Action_SA1Punch) {
